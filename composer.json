@@ -1,0 +1,31 @@
+{
+	"name": "wikibase/constrains",
+	"type": "library",
+	"description": "Library for Wikibase statement constraints",
+	"keywords": [
+		"wikibase",
+		"wikidata",
+		"constraints"
+	],
+	"homepage": "https://github.com/benestar/WikibaseConstrains",
+	"license": "GNU GPL v2+",
+	"authors": [
+		{
+			"name": "Bene*",
+			"email": "benestar.wikimedia@gmail.com"
+		}
+	],
+	"support": {
+		"irc": "irc://irc.freenode.net/wikidata"
+	},
+	"require": {
+		"php": ">=5.3.0",
+		"data-values/data-types": "~0.4",
+		"data-values/data-values": "~0.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"Wikibase\\Constrains\\": "src/"
+		}
+	}
+}
