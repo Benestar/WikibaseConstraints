@@ -2,15 +2,13 @@
 
 namespace Wikibase\Test;
 
-use DataValues\DataValue;
 use DataValues\NumberValue;
 use DataValues\StringValue;
-use InvalidArgumentException;
 use Wikibase\Constraints\SingleValueConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
+use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
-use Wikibase\PropertyValueSnak;
 
 /**
  * @covers Wikibase\Constraints\SingleValueConstraint
