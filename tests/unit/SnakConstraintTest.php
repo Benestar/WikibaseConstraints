@@ -2,12 +2,9 @@
 
 namespace Wikibase\Test;
 
-use DataValues\NumberValue;
-use DataValues\StringValue;
 use Wikibase\Constraints\SnakConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
-use Wikibase\DataModel\Snak\PropertyValueSnak;
-use Wikibase\DataModel\Snak\Snak;
+use Wikibase\DataModel\Snak\PropertySomeValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -18,97 +15,39 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class SnakConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	private function newInstance() {
-		return new SnakConstraint( new PropertyNoValueSnak( 42 ) );
-	}
-
-	public function provideSupportsSnak() {
-		$cases = array();
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			true
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			true
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new NumberValue( 123 ) ),
-			true
-		);
-
-		return $cases;
-	}
-
-	/**
-	 * @dataProvider provideSupportsSnak
-	 *
-	 * @param Snak $snak
-	 * @param boolean $expected
-	 */
-	public function testSupportsSnak( Snak $snak, $expected ) {
-		$this->assertEquals( $expected, $this->newInstance()->supportsSnak( $snak ) );
-	}
-
-	public function provideCheckSnak() {
-		$cases = array();
-
-		$requiredSnak = new PropertyValueSnak( 42, new StringValue( 'required' ) );
-
+	public function testValidateStatements_returnsTrue() {
+		$snakConstraint = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
 		$statements = new StatementList();
 		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
-		$statements->addNewStatement( new PropertyValueSnak( 23, new NumberValue( 123 ) ) );
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			$requiredSnak,
-			$statements,
-			false
-		);
-
-		$statements = new StatementList();
-		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'foo bar' ) ) );
-		$statements->addNewStatement( new PropertyValueSnak( 23, new NumberValue( 123 ) ) );
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			$requiredSnak,
-			$statements,
-			false
-		);
-
-		$statements = new StatementList();
-		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'required' ) ) );
-		$statements->addNewStatement( new PropertyValueSnak( 23, new NumberValue( 123 ) ) );
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			$requiredSnak,
-			$statements,
-			true
-		);
-
-		return $cases;
+		$this->assertTrue( $snakConstraint->validateStatements( $statements ) );
 	}
 
-	/**
-	 * @dataProvider provideCheckSnak
-	 *
-	 * @param Snak $snak
-	 * @param Snak $requiredSnak
-	 * @param StatementList $statements
-	 * @param boolean $expected
-	 */
-	public function testCheckSnak( Snak $snak, Snak $requiredSnak, StatementList $statements, $expected ) {
-		$snakConstraint = new SnakConstraint( $requiredSnak );
-		$this->assertEquals( $expected, $snakConstraint->checkSnak( $snak, $statements ) );
+	public function testValidateStatements_returnsFalse() {
+		$snakConstraint = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertySomeValueSnak( 42 ) );
+		$this->assertFalse( $snakConstraint->validateStatements( $statements ) );
 	}
 
 	public function testGetName() {
-		$this->assertEquals( 'snak', $this->newInstance()->getName() );
+		$snakConstraint = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
+		$this->assertEquals( 'snak', $snakConstraint->getName() );
+	}
+
+	public function testEquals() {
+		$snakConstraint1 = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
+		$snakConstraint2 = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
+
+		$this->assertTrue( $snakConstraint1->equals( $snakConstraint2 ) );
+		$this->assertTrue( $snakConstraint1->equals( $snakConstraint1 ) );
+	}
+
+	public function testNotEquals() {
+		$snakConstraint1 = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
+		$snakConstraint2 = new SnakConstraint( new PropertySomeValueSnak( 42 ) );
+
+		$this->assertFalse( $snakConstraint1->equals( $snakConstraint2 ) );
+		$this->assertFalse( $snakConstraint1->equals( null ) );
 	}
 
 }

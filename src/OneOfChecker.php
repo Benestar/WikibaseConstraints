@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use DataValues\DataValue;
 use InvalidArgumentException;
 
@@ -13,7 +14,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class OneOfConstraint extends DataValueConstraint {
+class OneOfChecker implements DataValueChecker {
 
 	/**
 	 * @var DataValue[]
@@ -38,7 +39,7 @@ class OneOfConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::supportsDataValue
+	 * @see DataValueChecker::supportsDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
@@ -48,7 +49,7 @@ class OneOfConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::checkDataValue
+	 * @see DataValueChecker::checkDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
@@ -64,7 +65,7 @@ class OneOfConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see Constraint::getName
+	 * @see DataValueChecker::getName
 	 *
 	 * @return string
 	 */
@@ -75,7 +76,7 @@ class OneOfConstraint extends DataValueConstraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param OneOfChecker $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {
@@ -87,7 +88,21 @@ class OneOfConstraint extends DataValueConstraint {
 			return false;
 		}
 
-		return $this->values === $constraint->values;
+		return $this->dataValuesEqual( $constraint->values );
+	}
+
+	private function dataValuesEqual( array $values ) {
+		reset( $values );
+
+		foreach ( $this->values as $value ) {
+			if ( !$value->equals( current( $values ) ) ) {
+				return false;
+			}
+
+			next( $values );
+		}
+
+		return true;
 	}
 
 }

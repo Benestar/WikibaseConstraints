@@ -3,7 +3,6 @@
 namespace Wikibase\Constraints;
 
 use Comparable;
-use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -17,21 +16,12 @@ use Wikibase\DataModel\Statement\StatementList;
 interface Constraint extends Comparable {
 
 	/**
-	 * Returns if this constraint supports the given snak.
+	 * Checks if the listed statements pass this constraint.
 	 *
-	 * @param Snak $snak
-	 * @return boolean
-	 */
-	public function supportsSnak( Snak $snak );
-
-	/**
-	 * Returns if the snak passes this constraint.
-	 *
-	 * @param Snak $snak
 	 * @param StatementList $statements
 	 * @return boolean
 	 */
-	public function checkSnak( Snak $snak, StatementList $statements );
+	public function validateStatements( StatementList $statements );
 
 	/**
 	 * Returns the unique name of this constraint.

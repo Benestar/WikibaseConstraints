@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use DataValues\DataValue;
 use InvalidArgumentException;
 
@@ -13,7 +14,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class RangeConstraint extends DataValueConstraint {
+class RangeChecker implements DataValueChecker {
 
 	/**
 	 * @var DataValue
@@ -48,22 +49,27 @@ class RangeConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::supportsDataValue
+	 * @see DataValueChecker::supportsDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected function supportsDataValue( DataValue $dataValue ) {
+	public function supportsDataValue( DataValue $dataValue ) {
 		return $dataValue->getType() === $this->minValue->getType();
 	}
 
 	/**
-	 * @see DataValueConstraint::checkDataValue
+	 * @see DataValueChecker::checkDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
+	 * @throws InvalidArgumentException
 	 */
-	protected function checkDataValue( DataValue $dataValue ) {
+	public function checkDataValue( DataValue $dataValue ) {
+		if ( !$this->supportsDataValue( $dataValue ) ) {
+			throw new InvalidArgumentException( 'Only values of the same type as the boundaries are accepted.' );
+		}
+
 		$minKey = $this->minValue->getSortKey();
 		$maxKey = $this->maxValue->getSortKey();
 		$key = $dataValue->getSortKey();
@@ -72,7 +78,7 @@ class RangeConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see Constraint::getName
+	 * @see DataValueChecker::getName
 	 *
 	 * @return string
 	 */
@@ -83,7 +89,7 @@ class RangeConstraint extends DataValueConstraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param RangeChecker $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

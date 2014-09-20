@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use DataValues\DataValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
@@ -14,7 +15,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class FormatConstraint extends DataValueConstraint {
+class FormatChecker implements DataValueChecker {
 
 	/**
 	 * @var string
@@ -34,7 +35,7 @@ class FormatConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::supportsDataValue
+	 * @see DataValueChecker::supportsDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
@@ -44,17 +45,22 @@ class FormatConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::checkDataValue
+	 * @see DataValueChecker::checkDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
+	 * @throws InvalidArgumentException
 	 */
 	public function checkDataValue( DataValue $dataValue ) {
+		if ( !$this->supportsDataValue( $dataValue ) ) {
+			throw new InvalidArgumentException( 'Only StringValue objects are supported.' );
+		}
+
 		return preg_match( $this->format, $dataValue->getValue() ) === 1;
 	}
 
 	/**
-	 * @see Constraint::getName
+	 * @see DataValueChecker::getName
 	 *
 	 * @return string
 	 */
@@ -65,7 +71,7 @@ class FormatConstraint extends DataValueConstraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param FormatChecker $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

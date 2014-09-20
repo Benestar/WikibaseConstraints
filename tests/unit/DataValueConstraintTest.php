@@ -2,12 +2,13 @@
 
 namespace Wikibase\Test;
 
+use DataValues\NumberValue;
 use DataValues\StringValue;
-use InvalidArgumentException;
 use Wikibase\Constraints\DataValueConstraint;
+use Wikibase\Constraints\FormatChecker;
+use Wikibase\Constraints\OneOfChecker;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
-use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -18,125 +19,45 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class DataValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	/**
-	 * @param boolean $supportsDataValue
-	 * @param boolean $checkDataValue
-	 * @return DataValueConstraint
-	 */
-	private function newInstance( $supportsDataValue, $checkDataValue ) {
-		$dataValueConstraint = $this->getMockForAbstractClass( 'Wikibase\Constraints\DataValueConstraint' );
-
-		$dataValueConstraint->expects( $this->any() )
-			->method( 'supportsDataValue' )
-			->will( $this->returnValue( $supportsDataValue ) );
-
-		
-		$dataValueConstraint->expects( $this->any() )
-			->method( 'checkDataValue' )
-			->will( $this->returnValue( $checkDataValue ) );
-
-		return $dataValueConstraint;
+	public function testValidateStatements_returnsTrue() {
+		$dataValueConstraint = new DataValueConstraint( new FormatChecker( '/foo/' ) );
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyValueSnak( 42, new NumberValue( 123 ) ) );
+		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'foo bar' ) ) );
+		$this->assertTrue( $dataValueConstraint->validateStatements( $statements ) );
 	}
 
-	public function provideSupportsSnak() {
-		$cases = array();
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			false,
-			false
-		);
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			true,
-			false
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			false,
-			false
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			true,
-			true
-		);
-
-		return $cases;
+	public function testValidateStatements_returnsFalse() {
+		$dataValueConstraint = new DataValueConstraint( new FormatChecker( '/foo/' ) );
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyValueSnak( 42, new NumberValue( 123 ) ) );
+		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'bar' ) ) );
+		$this->assertFalse( $dataValueConstraint->validateStatements( $statements ) );
 	}
 
-	/**
-	 * @dataProvider provideSupportsSnak
-	 *
-	 * @param Snak $snak
-	 * @param boolean $supportsDataValue
-	 * @param boolean $expected
-	 */
-	public function testSupportsSnak( Snak $snak, $supportsDataValue, $expected ) {
-		$this->assertEquals( $expected, $this->newInstance( $supportsDataValue, true )->supportsSnak( $snak ) );
+	public function testGetName() {
+		$dataValueConstraintFormat = new DataValueConstraint( new FormatChecker( '' ) );
+		$this->assertEquals( 'format', $dataValueConstraintFormat->getName() );
+		$dataValueConstraintOneOf = new DataValueConstraint( new OneOfChecker( array() ) );
+		$this->assertEquals( 'oneof', $dataValueConstraintOneOf->getName() );
 	}
 
-	public function provideCheckSnak() {
-		$cases = array();
+	public function testEquals() {
+		$dataValueConstraint1 = new DataValueConstraint( new FormatChecker( 'foo' ) );
+		$dataValueConstraint2 = new DataValueConstraint( new FormatChecker( 'foo' ) );
 
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			false,
-			false
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			true,
-			true
-		);
-
-		return $cases;
+		$this->assertTrue( $dataValueConstraint1->equals( $dataValueConstraint2 ) );
+		$this->assertTrue( $dataValueConstraint1->equals( $dataValueConstraint1 ) );
 	}
 
-	/**
-	 * @dataProvider provideCheckSnak
-	 *
-	 * @param Snak $snak
-	 * @param boolean $checkDataValue
-	 * @param boolean $expected
-	 */
-	public function testCheckSnak( Snak $snak, $checkDataValue, $expected ) {
-		$this->assertEquals( $expected, $this->newInstance( true, $checkDataValue )->checkSnak( $snak, new StatementList() ) );
-	}
+	public function testNotEquals() {
+		$dataValueConstraint1 = new DataValueConstraint( new FormatChecker( 'foo' ) );
+		$dataValueConstraint2 = new DataValueConstraint( new FormatChecker( 'bar' ) );
 
-	public function provideCheckSnakFails() {
-		$cases = array();
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			false
-		);
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			true
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			false
-		);
-
-		return $cases;
-	}
-
-	/**
-	 * @dataProvider provideCheckSnakFails
-	 * @expectedException InvalidArgumentException
-	 *
-	 * @param Snak $snak
-	 */
-	public function testCheckSnakFails( Snak $snak, $supportsDataValue ) {
-		$this->newInstance( $supportsDataValue, false )->checkSnak( $snak, new StatementList() );
+		$this->assertFalse( $dataValueConstraint1->equals( $dataValueConstraint2 ) );
+		$this->assertFalse( $dataValueConstraint1->equals( null ) );
 	}
 
 }

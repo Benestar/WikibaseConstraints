@@ -2,8 +2,6 @@
 
 namespace Wikibase\Constraints;
 
-use DataValues\DataValue;
-use InvalidArgumentException;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
@@ -16,49 +14,72 @@ use Wikibase\DataModel\Statement\StatementList;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-abstract class DataValueConstraint implements Constraint {
+class DataValueConstraint implements Constraint {
 
 	/**
-	 * @see Constraint::supportsSnak
-	 *
-	 * @param Snak $snak
-	 * @return boolean
+	 * @var DataValueChecker
 	 */
-	public function supportsSnak( Snak $snak ) {
-		return $snak instanceof PropertyValueSnak &&
-			$this->supportsDataValue( $snak->getDataValue() );
+	private $dataValueChecker;
+
+	public function __construct( DataValueChecker $dataValueChecker ) {
+		$this->dataValueChecker = $dataValueChecker;
 	}
 
 	/**
-	 * Returns if this constraint supports the given data value.
+	 * @see Constraint::validateStatements
 	 *
-	 * @param DataValue $dataValue
-	 * @return boolean
-	 */
-	protected abstract function supportsDataValue( DataValue $dataValue );
-
-	/**
-	 * @see Constraint::checkSnak
-	 *
-	 * @param Snak $snak
 	 * @param StatementList $statements
 	 * @return boolean
-	 * @throws InvalidArgumentException
 	 */
-	public function checkSnak( Snak $snak, StatementList $statements ) {
-		if ( !$this->supportsSnak( $snak ) ) {
-			throw new InvalidArgumentException( 'This constraint only supports value snaks.' );
+	public function validateStatements( StatementList $statements ) {
+		foreach ( $statements as $statement ) {
+			if ( !$this->validateSnak( $statement->getMainSnak() ) ) {
+				return false;
+			}
 		}
 
-		return $this->checkDataValue( $snak->getDataValue() );
+		return true;
+	}
+
+	private function validateSnak( Snak $snak ) {
+		if ( !( $snak instanceof PropertyValueSnak ) ) {
+			return true;
+		}
+
+		$dataValue = $snak->getDataValue();
+
+		if ( !$this->dataValueChecker->supportsDataValue( $dataValue ) ) {
+			return true;
+		}
+
+		return $this->dataValueChecker->checkDataValue( $dataValue );
 	}
 
 	/**
-	 * Returns if the data value passes this constraint.
+	 * @see Constraint::getName
 	 *
-	 * @param DataValue $dataValue
+	 * @return string
+	 */
+	public function getName() {
+		return $this->dataValueChecker->getName();
+	}
+
+	/**
+	 * @see Comparable::equals
+	 *
+	 * @param DataValueConstraint $constraint
 	 * @return boolean
 	 */
-	protected abstract function checkDataValue( DataValue $dataValue );
+	public function equals( $constraint ) {
+		if ( $constraint === $this ) {
+			return true;
+		}
+
+		if ( !( $constraint instanceof self ) ) {
+			return false;
+		}
+
+		return $this->dataValueChecker->equals( $constraint->dataValueChecker );
+	}
 
 }

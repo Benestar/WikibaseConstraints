@@ -2,12 +2,9 @@
 
 namespace Wikibase\Test;
 
-use DataValues\NumberValue;
-use DataValues\StringValue;
 use Wikibase\Constraints\ConflictConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
-use Wikibase\DataModel\Snak\PropertyValueSnak;
-use Wikibase\DataModel\Snak\Snak;
+use Wikibase\DataModel\Snak\PropertySomeValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -18,97 +15,39 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class ConflictConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	private function newInstance() {
-		return new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+	public function testValidateStatements_returnsTrue() {
+		$conflictConstraint = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertySomeValueSnak( 42 ) );
+		$this->assertTrue( $conflictConstraint->validateStatements( $statements ) );
 	}
 
-	public function provideSupportsSnak() {
-		$cases = array();
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			true
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			true
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new NumberValue( 123 ) ),
-			true
-		);
-
-		return $cases;
-	}
-
-	/**
-	 * @dataProvider provideSupportsSnak
-	 *
-	 * @param Snak $snak
-	 * @param boolean $expected
-	 */
-	public function testSupportsSnak( Snak $snak, $expected ) {
-		$this->assertEquals( $expected, $this->newInstance()->supportsSnak( $snak ) );
-	}
-
-	public function provideCheckSnak() {
-		$cases = array();
-
-		$conflictingSnak = new PropertyValueSnak( 42, new StringValue( 'conflict' ) );
-
+	public function testValidateStatements_returnsFalse() {
+		$conflictConstraint = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
 		$statements = new StatementList();
 		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
-		$statements->addNewStatement( new PropertyValueSnak( 23, new NumberValue( 123 ) ) );
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			$conflictingSnak,
-			$statements,
-			true
-		);
-
-		$statements = new StatementList();
-		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'foo bar' ) ) );
-		$statements->addNewStatement( new PropertyValueSnak( 23, new NumberValue( 123 ) ) );
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			$conflictingSnak,
-			$statements,
-			true
-		);
-
-		$statements = new StatementList();
-		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'conflict' ) ) );
-		$statements->addNewStatement( new PropertyValueSnak( 23, new NumberValue( 123 ) ) );
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			$conflictingSnak,
-			$statements,
-			false
-		);
-
-		return $cases;
-	}
-
-	/**
-	 * @dataProvider provideCheckSnak
-	 *
-	 * @param Snak $snak
-	 * @param Snak $conflictingSnak
-	 * @param StatementList $statements
-	 * @param boolean $expected
-	 */
-	public function testCheckSnak( Snak $snak, Snak $conflictingSnak, StatementList $statements, $expected ) {
-		$conflictConstraint = new ConflictConstraint( $conflictingSnak );
-		$this->assertEquals( $expected, $conflictConstraint->checkSnak( $snak, $statements ) );
+		$this->assertFalse( $conflictConstraint->validateStatements( $statements ) );
 	}
 
 	public function testGetName() {
-		$this->assertEquals( 'conflict', $this->newInstance()->getName() );
+		$conflictConstraint = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+		$this->assertEquals( 'conflict', $conflictConstraint->getName() );
+	}
+
+	public function testEquals() {
+		$conflictConstraint1 = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+		$conflictConstraint2 = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+
+		$this->assertTrue( $conflictConstraint1->equals( $conflictConstraint2 ) );
+		$this->assertTrue( $conflictConstraint1->equals( $conflictConstraint1 ) );
+	}
+
+	public function testNotEquals() {
+		$conflictConstraint1 = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+		$conflictConstraint2 = new ConflictConstraint( new PropertySomeValueSnak( 42 ) );
+
+		$this->assertFalse( $conflictConstraint1->equals( $conflictConstraint2 ) );
+		$this->assertFalse( $conflictConstraint1->equals( null ) );
 	}
 
 }

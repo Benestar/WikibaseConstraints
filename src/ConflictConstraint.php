@@ -25,23 +25,12 @@ class ConflictConstraint implements Constraint {
 	}
 
 	/**
-	 * @see Constraint::supportsSnak
+	 * @see Constraint::validateStatements
 	 *
-	 * @param Snak $snak
-	 * @return boolean
-	 */
-	public function supportsSnak( Snak $snak ) {
-		return true;
-	}
-
-	/**
-	 * @see Constraint::checkSnak
-	 *
-	 * @param Snak $snak
 	 * @param StatementList $statements
 	 * @return boolean
 	 */
-	public function checkSnak( Snak $snak, StatementList $statements ) {
+	public function validateStatements( StatementList $statements ) {
 		foreach ( $statements as $statement ) {
 			if ( $statement->getMainSnak()->equals( $this->snak ) ) {
 				return false;
@@ -63,7 +52,7 @@ class ConflictConstraint implements Constraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param ConflictConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {
