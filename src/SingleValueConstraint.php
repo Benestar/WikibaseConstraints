@@ -35,7 +35,13 @@ class SingleValueConstraint implements Constraint {
 	 */
 	public function checkSnak( Snak $snak, StatementList $statements ) {
 		$byPropertyIdGrouper = new ByPropertyIdGrouper( $statements );
-		return count( $byPropertyIdGrouper->getByPropertyId( $snak->getPropertyId() ) ) === 1;
+		$propertyId = $snak->getPropertyId();
+
+		if ( !$byPropertyIdGrouper->hasPropertyId( $propertyId ) ) {
+			return false;
+		}
+
+		return count( $byPropertyIdGrouper->getByPropertyId( $propertyId ) ) === 1;
 	}
 
 	/**
