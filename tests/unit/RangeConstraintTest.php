@@ -145,4 +145,31 @@ class RangeConstraintTest extends \PHPUnit_Framework_TestCase {
 		$rangeConstraint->checkSnak( $snak, new StatementList() );
 	}
 
+	public function provideConstructionFails() {
+		$cases = array();
+
+		$cases[] = array(
+			new StringValue( 'foo bar' ),
+			new NumberValue( 123 )
+		);
+
+		$cases[] = array(
+			new NumberValue( 10 ),
+			new NumberValue( 1 )
+		);
+
+		return $cases;
+	}
+
+	/**
+	 * @dataProvider provideConstructionFails
+	 * @expectedException InvalidArgumentException
+	 *
+	 * @param DataValue $minValue
+	 * @param DataValue $maxValue
+	 */
+	public function testConstructionFails( DataValue $minValue, DataValue $maxValue ) {
+		$rangeConstraint = new RangeConstraint( $minValue, $maxValue );
+	}
+
 }
