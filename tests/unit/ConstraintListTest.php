@@ -75,8 +75,10 @@ class ConstraintListTest extends \PHPUnit_Framework_TestCase {
 	public function testNotEquals() {
 		$constraintList1 = new ConstraintList( array( new SingleValueConstraint() ) );
 		$constraintList2 = new ConstraintList( array( new MultiValueConstraint() ) );
+		$constraintList3 = new ConstraintList( array() );
 
 		$this->assertFalse( $constraintList1->equals( $constraintList2 ) );
+		$this->assertFalse( $constraintList1->equals( $constraintList3 ) );
 		$this->assertFalse( $constraintList1->equals( null ) );
 	}
 
