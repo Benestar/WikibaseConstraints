@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
@@ -13,7 +14,7 @@ use Wikibase\DataModel\Statement\StatementList;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-interface Constraint {
+interface Constraint extends Comparable {
 
 	/**
 	 * Returns if this constraint supports the given snak.

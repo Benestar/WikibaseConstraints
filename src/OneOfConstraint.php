@@ -72,4 +72,22 @@ class OneOfConstraint extends DataValueConstraint {
 		return 'oneof';
 	}
 
+	/**
+	 * @see Comparable::equals
+	 *
+	 * @param mixed $constraint
+	 * @return boolean
+	 */
+	public function equals( $constraint ) {
+		if ( $constraint === $this ) {
+			return true;
+		}
+
+		if ( !( $constraint instanceof self ) ) {
+			return false;
+		}
+
+		return $this->values === $constraint->values;
+	}
+
 }

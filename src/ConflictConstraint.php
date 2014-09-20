@@ -60,4 +60,22 @@ class ConflictConstraint implements Constraint {
 		return 'conflict';
 	}
 
+	/**
+	 * @see Comparable::equals
+	 *
+	 * @param mixed $constraint
+	 * @return boolean
+	 */
+	public function equals( $constraint ) {
+		if ( $constraint === $this ) {
+			return true;
+		}
+
+		if ( !( $constraint instanceof self ) ) {
+			return false;
+		}
+
+		return $this->snak->equals( $constraint->snak );
+	}
+
 }

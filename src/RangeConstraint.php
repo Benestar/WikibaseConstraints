@@ -80,4 +80,23 @@ class RangeConstraint extends DataValueConstraint {
 		return 'range';
 	}
 
+	/**
+	 * @see Comparable::equals
+	 *
+	 * @param mixed $constraint
+	 * @return boolean
+	 */
+	public function equals( $constraint ) {
+		if ( $constraint === $this ) {
+			return true;
+		}
+
+		if ( !( $constraint instanceof self ) ) {
+			return false;
+		}
+
+		return $this->minValue->equals( $constraint->minValue ) &&
+			$this->maxValue->equals( $constraint->maxValue );
+	}
+
 }
