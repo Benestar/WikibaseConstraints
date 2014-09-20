@@ -2,8 +2,6 @@
 
 namespace Wikibase\Constraints;
 
-use Wikibase\DataModel\ByPropertyIdGrouper;
-use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -17,31 +15,12 @@ use Wikibase\DataModel\Statement\StatementList;
 class SingleValueConstraint implements Constraint {
 
 	/**
-	 * @see Constraint::supportsSnak
-	 *
-	 * @param Snak $snak
+	 * @see Constraint::validateStatements
+	 *	 * @param StatementList $statements
 	 * @return boolean
 	 */
-	public function supportsSnak( Snak $snak ) {
-		return true;
-	}
-
-	/**
-	 * @see Constraint::checkSnak
-	 *
-	 * @param Snak $snak
-	 * @param StatementList $statements
-	 * @return boolean
-	 */
-	public function checkSnak( Snak $snak, StatementList $statements ) {
-		$byPropertyIdGrouper = new ByPropertyIdGrouper( $statements );
-		$propertyId = $snak->getPropertyId();
-
-		if ( !$byPropertyIdGrouper->hasPropertyId( $propertyId ) ) {
-			return false;
-		}
-
-		return count( $byPropertyIdGrouper->getByPropertyId( $propertyId ) ) === 1;
+	public function validateStatements( StatementList $statements ) {
+		return $statements->count() === 1;
 	}
 
 	/**

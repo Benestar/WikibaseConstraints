@@ -2,8 +2,8 @@
 
 namespace Wikibase\Constraints;
 
+use Wikibase\DataModel\ByPropertyIdGrouper;
 use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -17,9 +17,9 @@ use Wikibase\DataModel\Statement\StatementList;
 class ConstraintsRegistry {
 
 	/**
-	 * @var Constraint[][]
+	 * @var ConstraintList[]
 	 */
-	private $constraints = array();
+	private $constraintsPerProperty = array();
 
 	/**
 	 * Registers a constraint in this registry for the given property id.
@@ -29,50 +29,26 @@ class ConstraintsRegistry {
 	 */
 	public function registerConstraintForPropertyId( PropertyId $propertyId, Constraint $constraint ) {
 		$idSerialization = $propertyId->getSerialization();
-		if ( isset( $this->constraints[$idSerialization] ) ) {
-			$this->constraints[$idSerialization][] = $constraint;
-		} else {
-			$this->constraints[$idSerialization] = array( $constraint );
+		if ( !isset( $this->constraintsPerProperty[$idSerialization] ) ) {
+			$this->constraintsPerProperty[$idSerialization] = new ConstraintList();
 		}
+		$this->constraintsPerProperty[$idSerialization]->addConstraint( $constraint );
 	}
 
 	/**
-	 * Returns all constraints for the given snak.
+	 * Applies all constraints for the given statements
+	 * and returns the list of constraints which failed.
 	 *
-	 * @param Snak $snak
-	 * @return Constraint[]
-	 */
-	public function getConstraintsForSnak( Snak $snak ) {
-		$idSerialization = $snak->getPropertyId()->getSerialization();
-		$constraints = array();
-
-		if ( isset( $this->constraints[$idSerialization] ) ) {
-			foreach ( $this->constraints[$idSerialization] as $constraint ) {
-				if ( $constraint->supportsSnak( $snak ) ) {
-					$constraints[] = $constraint;
-				}
-			}
-		}
-
-		return $constraints;
-	}
-
-	/**
-	 * Applies all constraints for the given snak and
-	 * returns the list of constraints which failed.
-	 *
-	 * @param Snak $snak
 	 * @param StatementList $statements
 	 * @return string[]
 	 */
-	public function applyConstraints( Snak $snak, StatementList $statements ) {
-		$constraints = $this->getConstraintsForSnak( $snak );
+	public function applyConstraints( StatementList $statements ) {
+		$byPropertyIdGrouper = new ByPropertyIdGrouper( $statements );
 		$failures = array();
 
-		foreach ( $constraints as $constraint ) {
-			if ( !$constraint->checkSnak( $snak, $statements ) ) {
-				$failures[] = $constraint->getName();
-			}
+		foreach ( $this->constraintsPerProperty as $propertyId => $constraintList ) {
+			$statementsForProperty = $byPropertyIdGrouper->getByPropertyId( new PropertyId( $propertyId ) );
+			$failures[$propertyId] = $constraintList->applyConstraints( $statementsForProperty );
 		}
 
 		return $failures;

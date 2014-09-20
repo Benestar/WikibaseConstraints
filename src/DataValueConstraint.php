@@ -3,7 +3,6 @@
 namespace Wikibase\Constraints;
 
 use DataValues\DataValue;
-use InvalidArgumentException;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
@@ -19,14 +18,31 @@ use Wikibase\DataModel\Statement\StatementList;
 abstract class DataValueConstraint implements Constraint {
 
 	/**
-	 * @see Constraint::supportsSnak
+	 * @see Constraint::validateStatements
 	 *
-	 * @param Snak $snak
+	 * @param StatementList $statements
 	 * @return boolean
 	 */
-	public function supportsSnak( Snak $snak ) {
-		return $snak instanceof PropertyValueSnak &&
-			$this->supportsDataValue( $snak->getDataValue() );
+	public function validateStatements( StatementList $statements ) {
+		foreach ( $statements as $statement ) {
+			if ( !$this->validateSnak( $statement->getMainSnak() ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private function validateSnak( Snak $snak ) {
+		if ( !( $snak instanceof PropertyValueSnak ) ) {
+			return true;
+		}
+
+		$dataValue = $snak->getDataValue();
+
+		if ( $this->supportsDataValue( $dataValue ) ) {
+			return $this->checkDataValue( $dataValue );
+		}
 	}
 
 	/**
@@ -36,22 +52,6 @@ abstract class DataValueConstraint implements Constraint {
 	 * @return boolean
 	 */
 	protected abstract function supportsDataValue( DataValue $dataValue );
-
-	/**
-	 * @see Constraint::checkSnak
-	 *
-	 * @param Snak $snak
-	 * @param StatementList $statements
-	 * @return boolean
-	 * @throws InvalidArgumentException
-	 */
-	public function checkSnak( Snak $snak, StatementList $statements ) {
-		if ( !$this->supportsSnak( $snak ) ) {
-			throw new InvalidArgumentException( 'This constraint only supports value snaks.' );
-		}
-
-		return $this->checkDataValue( $snak->getDataValue() );
-	}
 
 	/**
 	 * Returns if the data value passes this constraint.
