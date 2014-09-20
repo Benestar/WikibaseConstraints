@@ -8,9 +8,9 @@ use DataValues\StringValue;
 use InvalidArgumentException;
 use Wikibase\Constraints\OneOfConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
+use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
-use Wikibase\PropertyValueSnak;
 
 /**
  * @covers Wikibase\Constraints\OneOfConstraint

@@ -31,15 +31,19 @@ class RangeConstraint extends DataValueConstraint {
 	 * @throws InvalidArgumentException
 	 */
 	public function __construct( DataValue $minValue, DataValue $maxValue ) {
-		$this->assertHaveCorrectTypes( $minValue, $maxValue );
+		$this->assertCorrectValues( $minValue, $maxValue );
 
 		$this->minValue = $minValue;
 		$this->maxValue = $maxValue;
 	}
 
-	private function assertHaveCorrectTypes( DataValue $minValue, DataValue $maxValue ) {
+	private function assertCorrectValues( DataValue $minValue, DataValue $maxValue ) {
 		if ( $minValue->getType() !== $maxValue->getType() ) {
 			throw new InvalidArgumentException( '$minValue and $maxValue must have the same type.' );
+		}
+
+		if ( $minValue->getSortKey() > $maxValue->getSortKey() ) {
+			throw new InvalidArgumentException( '$minValue must not be greater then $maxValue' );
 		}
 	}
 
@@ -64,7 +68,7 @@ class RangeConstraint extends DataValueConstraint {
 		$maxKey = $this->maxValue->getSortKey();
 		$key = $dataValue->getSortKey();
 
-		return $minKey < $key && $key < $maxKey;
+		return $minKey <= $key && $key <= $maxKey;
 	}
 
 	/**
