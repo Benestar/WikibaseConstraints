@@ -46,7 +46,7 @@ class MultiValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	public function testNotEquals() {
 		$multiValueConstraint = new MultiValueConstraint();
 
-		$this->assertFals( $multiValueConstraint->equals( null ) );
+		$this->assertFalse( $multiValueConstraint->equals( null ) );
 	}
 
 }
