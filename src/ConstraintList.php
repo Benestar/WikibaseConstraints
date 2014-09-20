@@ -96,7 +96,7 @@ class ConstraintList implements IteratorAggregate, Comparable, Countable  {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraintList
+	 * @param ConstraintList $constraintList
 	 *
 	 * @return bool
 	 */

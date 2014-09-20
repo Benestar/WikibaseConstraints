@@ -52,7 +52,7 @@ class ConflictConstraint implements Constraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param ConflictConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

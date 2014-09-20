@@ -67,7 +67,7 @@ class DataValueConstraint implements Constraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param DataValueConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

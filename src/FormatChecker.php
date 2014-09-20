@@ -71,7 +71,7 @@ class FormatChecker implements DataValueChecker {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param FormatChecker $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

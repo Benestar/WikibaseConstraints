@@ -89,7 +89,7 @@ class RangeChecker implements DataValueChecker {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param RangeChecker $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

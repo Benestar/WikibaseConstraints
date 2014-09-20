@@ -76,7 +76,7 @@ class OneOfChecker implements DataValueChecker {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param OneOfChecker $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

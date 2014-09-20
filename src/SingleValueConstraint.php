@@ -36,7 +36,7 @@ class SingleValueConstraint implements Constraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param SingleValueConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

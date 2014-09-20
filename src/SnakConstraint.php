@@ -52,7 +52,7 @@ class SnakConstraint implements Constraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param SnakConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {

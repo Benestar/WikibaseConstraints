@@ -36,7 +36,7 @@ class MultiValueConstraint implements Constraint {
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param mixed $constraint
+	 * @param MultiValueConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {
