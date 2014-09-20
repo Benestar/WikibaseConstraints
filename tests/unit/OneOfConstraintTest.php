@@ -20,6 +20,10 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class OneOfConstraintTest extends \PHPUnit_Framework_TestCase {
 
+	private function newEmpty() {
+		return new OneOfConstraint( array() );
+	}
+
 	public function provideSupportsSnak() {
 		$cases = array();
 
@@ -43,8 +47,7 @@ class OneOfConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$oneOfConstraint = new OneOfConstraint( array() );
-		$this->assertEquals( $expected, $oneOfConstraint->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -113,8 +116,11 @@ class OneOfConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param Snak $snak
 	 */
 	public function testCheckSnakFails( Snak $snak ) {
-		$oneOfConstraint = new OneOfConstraint( array() );
-		$oneOfConstraint->checkSnak( $snak, new StatementList() );
+		$this->newEmpty()->checkSnak( $snak, new StatementList() );
+	}
+
+	public function testGetName() {
+		$this->assertEquals( 'oneof', $this->newEmpty()->getName() );
 	}
 
 }

@@ -18,6 +18,10 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class ConflictConstraintTest extends \PHPUnit_Framework_TestCase {
 
+	private function newEmpty() {
+		return new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
+	}
+
 	public function provideSupportsSnak() {
 		$cases = array();
 
@@ -46,8 +50,7 @@ class ConflictConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$conflictConstraint = new ConflictConstraint( new PropertyNoValueSnak( 42 ) );
-		$this->assertEquals( $expected, $conflictConstraint->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -102,6 +105,10 @@ class ConflictConstraintTest extends \PHPUnit_Framework_TestCase {
 	public function testCheckSnak( Snak $snak, Snak $conflictingSnak, StatementList $statements, $expected ) {
 		$conflictConstraint = new ConflictConstraint( $conflictingSnak );
 		$this->assertEquals( $expected, $conflictConstraint->checkSnak( $snak, $statements ) );
+	}
+
+	public function testGetName() {
+		$this->assertEquals( 'conflict', $this->newEmpty()->getName() );
 	}
 
 }

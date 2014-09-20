@@ -18,6 +18,10 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class FormatConstraintTest extends \PHPUnit_Framework_TestCase {
 
+	private function newEmpty() {
+		return new FormatConstraint( '' );
+	}
+
 	public function provideSupportsSnak() {
 		$cases = array();
 
@@ -46,8 +50,7 @@ class FormatConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$formatConstraint = new FormatConstraint( '' );
-		$this->assertEquals( $expected, $formatConstraint->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -107,8 +110,11 @@ class FormatConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param Snak $snak
 	 */
 	public function testCheckSnakFails( Snak $snak ) {
-		$formatConstraint = new FormatConstraint( '' );
-		$formatConstraint->checkSnak( $snak, new StatementList() );
+		$this->newEmpty()->checkSnak( $snak, new StatementList() );
+	}
+
+	public function testGetName() {
+		$this->assertEquals( 'format', $this->newEmpty()->getName() );
 	}
 
 }
