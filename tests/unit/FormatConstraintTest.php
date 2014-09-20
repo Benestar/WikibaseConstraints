@@ -131,7 +131,7 @@ class FormatConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider provideConstructionFails
 	 * @expectedException InvalidArgumentException
 	 *
-	 * @param string $format
+	 * @param mixed $format
 	 */
 	public function testConstructionFails( $format ) {
 		new FormatConstraint( $format );

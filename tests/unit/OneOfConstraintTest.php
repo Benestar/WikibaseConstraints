@@ -119,6 +119,49 @@ class OneOfConstraintTest extends \PHPUnit_Framework_TestCase {
 		$this->newEmpty()->checkSnak( $snak, new StatementList() );
 	}
 
+	public function provideConstructionFails() {
+		$cases = array();
+
+		$cases[] = array(
+			array( array(), array() )
+		);
+
+		$cases[] = array(
+			array( 123, 456, 789 )
+		);
+
+		$cases[] = array(
+			array( null, null )
+		);
+
+		$cases[] = array(
+			array(
+				new PropertyNoValueSnak( 42 ),
+				new PropertyValueSnak( 23, new StringValue( 'foo bar' ) )
+			)
+		);
+
+		$cases[] = array(
+			array(
+				new StringValue( 'foo bar' ),
+				null,
+				new NumberValue( 123 )
+			)
+		);
+
+		return $cases;
+	}
+
+	/**
+	 * @dataProvider provideConstructionFails
+	 * @expectedException InvalidArgumentException
+	 *
+	 * @param array $values
+	 */
+	public function testConstructionFails( array $values ) {
+		new OneOfConstraint( $values );
+	}
+
 	public function testGetName() {
 		$this->assertEquals( 'oneof', $this->newEmpty()->getName() );
 	}
