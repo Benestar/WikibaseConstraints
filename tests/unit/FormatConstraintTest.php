@@ -113,6 +113,30 @@ class FormatConstraintTest extends \PHPUnit_Framework_TestCase {
 		$this->newEmpty()->checkSnak( $snak, new StatementList() );
 	}
 
+	public function provideConstructionFails() {
+		$cases = array();
+
+		$cases[] = array( array() );
+
+		$cases[] = array( 123 );
+
+		$cases[] = array( null );
+
+		$cases[] = array( new PropertyNoValueSnak( 42 ) );
+
+		return $cases;
+	}
+
+	/**
+	 * @dataProvider provideConstructionFails
+	 * @expectedException InvalidArgumentException
+	 *
+	 * @param string $format
+	 */
+	public function testConstructionFails( $format ) {
+		new FormatConstraint( $format );
+	}
+
 	public function testGetName() {
 		$this->assertEquals( 'format', $this->newEmpty()->getName() );
 	}

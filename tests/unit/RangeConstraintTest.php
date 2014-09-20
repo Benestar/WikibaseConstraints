@@ -171,7 +171,7 @@ class RangeConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param DataValue $maxValue
 	 */
 	public function testConstructionFails( DataValue $minValue, DataValue $maxValue ) {
-		$rangeConstraint = new RangeConstraint( $minValue, $maxValue );
+		new RangeConstraint( $minValue, $maxValue );
 	}
 
 	public function testGetName() {
