@@ -18,7 +18,7 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class SnakConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	private function newEmpty() {
+	private function newInstance() {
 		return new SnakConstraint( new PropertyNoValueSnak( 42 ) );
 	}
 
@@ -50,7 +50,7 @@ class SnakConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newInstance()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -108,7 +108,7 @@ class SnakConstraintTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetName() {
-		$this->assertEquals( 'snak', $this->newEmpty()->getName() );
+		$this->assertEquals( 'snak', $this->newInstance()->getName() );
 	}
 
 }

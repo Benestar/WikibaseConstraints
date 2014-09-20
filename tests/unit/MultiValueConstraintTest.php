@@ -18,7 +18,7 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class MultiValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	private function newEmpty() {
+	private function newInstance() {
 		return new MultiValueConstraint();
 	}
 
@@ -50,7 +50,7 @@ class MultiValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newInstance()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -90,11 +90,11 @@ class MultiValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testCheckSnak( Snak $snak, StatementList $statements, $expected ) {
-		$this->assertEquals( $expected, $this->newEmpty()->checkSnak( $snak, $statements ) );
+		$this->assertEquals( $expected, $this->newInstance()->checkSnak( $snak, $statements ) );
 	}
 
 	public function testGetName() {
-		$this->assertEquals( 'multivalue', $this->newEmpty()->getName() );
+		$this->assertEquals( 'multivalue', $this->newInstance()->getName() );
 	}
 
 }

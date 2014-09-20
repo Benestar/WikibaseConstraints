@@ -18,7 +18,7 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	private function newEmpty() {
+	private function newInstance() {
 		return new SingleValueConstraint();
 	}
 
@@ -50,7 +50,7 @@ class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newInstance()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -90,11 +90,11 @@ class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testCheckSnak( Snak $snak, StatementList $statements, $expected ) {
-		$this->assertEquals( $expected, $this->newEmpty()->checkSnak( $snak, $statements ) );
+		$this->assertEquals( $expected, $this->newInstance()->checkSnak( $snak, $statements ) );
 	}
 
 	public function testGetName() {
-		$this->assertEquals( 'singlevalue', $this->newEmpty()->getName() );
+		$this->assertEquals( 'singlevalue', $this->newInstance()->getName() );
 	}
 
 }

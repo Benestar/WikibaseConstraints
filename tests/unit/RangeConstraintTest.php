@@ -20,7 +20,7 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class RangeConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	private function newEmpty() {
+	private function newInstance() {
 		return new RangeConstraint( new NumberValue( 1 ), new NumberValue( 3 ) );
 	}
 
@@ -52,7 +52,7 @@ class RangeConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$this->assertEquals( $expected, $this->newEmpty()->supportsSnak( $snak ) );
+		$this->assertEquals( $expected, $this->newInstance()->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -144,7 +144,7 @@ class RangeConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param Snak $snak
 	 */
 	public function testCheckSnakFails( Snak $snak ) {
-		$this->newEmpty()->checkSnak( $snak, new StatementList() );
+		$this->newInstance()->checkSnak( $snak, new StatementList() );
 	}
 
 	public function provideConstructionFails() {
@@ -175,7 +175,7 @@ class RangeConstraintTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetName() {
-		$this->assertEquals( 'range', $this->newEmpty()->getName() );
+		$this->assertEquals( 'range', $this->newInstance()->getName() );
 	}
 
 }
