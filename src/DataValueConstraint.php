@@ -2,7 +2,6 @@
 
 namespace Wikibase\Constraints;
 
-use DataValues\DataValue;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
@@ -15,7 +14,16 @@ use Wikibase\DataModel\Statement\StatementList;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-abstract class DataValueConstraint implements Constraint {
+class DataValueConstraint implements Constraint {
+
+	/**
+	 * @var DataValueChecker
+	 */
+	private $dataValueChecker;
+
+	public function __construct( DataValueChecker $dataValueChecker ) {
+		$this->dataValueChecker = $dataValueChecker;
+	}
 
 	/**
 	 * @see Constraint::validateStatements
@@ -40,27 +48,38 @@ abstract class DataValueConstraint implements Constraint {
 
 		$dataValue = $snak->getDataValue();
 
-		if ( !$this->supportsDataValue( $dataValue ) ) {
+		if ( !$this->dataValueChecker->supportsDataValue( $dataValue ) ) {
 			return true;
 		}
 
-		return $this->checkDataValue( $dataValue );
+		return $this->dataValueChecker->checkDataValue( $dataValue );
 	}
 
 	/**
-	 * Returns if this constraint supports the given data value.
+	 * @see Constraint::getName
 	 *
-	 * @param DataValue $dataValue
-	 * @return boolean
+	 * @return string
 	 */
-	protected abstract function supportsDataValue( DataValue $dataValue );
+	public function getName() {
+		return $this->dataValueChecker->getName();
+	}
 
 	/**
-	 * Returns if the data value passes this constraint.
+	 * @see Comparable::equals
 	 *
-	 * @param DataValue $dataValue
+	 * @param mixed $constraint
 	 * @return boolean
 	 */
-	protected abstract function checkDataValue( DataValue $dataValue );
+	public function equals( $constraint ) {
+		if ( $constraint === $this ) {
+			return true;
+		}
+
+		if ( !( $constraint instanceof self ) ) {
+			return false;
+		}
+
+		return $this->dataValueChecker->equals( $constraint->dataValueChecker );
+	}
 
 }

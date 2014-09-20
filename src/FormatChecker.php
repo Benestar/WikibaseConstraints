@@ -14,7 +14,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class FormatConstraint extends DataValueConstraint {
+class FormatChecker implements DataValueChecker {
 
 	/**
 	 * @var string
@@ -34,27 +34,27 @@ class FormatConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::supportsDataValue
+	 * @see DataValueChecker::supportsDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected function supportsDataValue( DataValue $dataValue ) {
+	public function supportsDataValue( DataValue $dataValue ) {
 		return $dataValue instanceof StringValue;
 	}
 
 	/**
-	 * @see DataValueConstraint::checkDataValue
+	 * @see DataValueChecker::checkDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected function checkDataValue( DataValue $dataValue ) {
+	public function checkDataValue( DataValue $dataValue ) {
 		return preg_match( $this->format, $dataValue->getValue() ) === 1;
 	}
 
 	/**
-	 * @see Constraint::getName
+	 * @see DataValueChecker::getName
 	 *
 	 * @return string
 	 */

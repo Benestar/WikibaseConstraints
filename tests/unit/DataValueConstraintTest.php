@@ -16,26 +16,6 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class DataValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	/**
-	 * @param boolean $supportsDataValue
-	 * @param boolean $checkDataValue
-	 * @return DataValueConstraint
-	 */
-	private function newInstance( $supportsDataValue, $checkDataValue ) {
-		$dataValueConstraint = $this->getMockForAbstractClass( 'Wikibase\Constraints\DataValueConstraint' );
-
-		$dataValueConstraint->expects( $this->any() )
-			->method( 'supportsDataValue' )
-			->will( $this->returnValue( $supportsDataValue ) );
-
-		
-		$dataValueConstraint->expects( $this->any() )
-			->method( 'checkDataValue' )
-			->will( $this->returnValue( $checkDataValue ) );
-
-		return $dataValueConstraint;
-	}
-
 	public function provideValidateStatements() {
 		$cases = array();
 
@@ -67,9 +47,29 @@ class DataValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testValidateStatements( $supportsDataValue, $checkDataValue, StatementList $statements, $expected ) {
-		$dataValueConstraint = $this->newInstance( $supportsDataValue, $checkDataValue );
+		$dataValueConstraint = new DataValueConstraint( $this->getDataValueCheckerMock( $supportsDataValue, $checkDataValue ) );
 		$validated = $dataValueConstraint->validateStatements( $statements );
 		$this->assertEquals( $expected, $validated );
+	}
+
+	/**
+	 * @param boolean $supportsDataValue
+	 * @param boolean $checkDataValue
+	 * @return DataValueChecker
+	 */
+	private function getDataValueCheckerMock( $supportsDataValue, $checkDataValue ) {
+		$dataValueChecker = $this->getMock( 'Wikibase\Constraints\DataValueChecker' );
+
+		$dataValueChecker->expects( $this->any() )
+			->method( 'supportsDataValue' )
+			->will( $this->returnValue( $supportsDataValue ) );
+
+		
+		$dataValueChecker->expects( $this->any() )
+			->method( 'checkDataValue' )
+			->will( $this->returnValue( $checkDataValue ) );
+
+		return $dataValueChecker;
 	}
 
 }

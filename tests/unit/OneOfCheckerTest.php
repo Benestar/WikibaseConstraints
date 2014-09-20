@@ -4,25 +4,25 @@ namespace Wikibase\Test;
 
 use DataValues\StringValue;
 use InvalidArgumentException;
-use Wikibase\Constraints\OneOfConstraint;
+use Wikibase\Constraints\OneOfChecker;
 
 /**
- * @covers Wikibase\Constraints\OneOfConstraint
+ * @covers Wikibase\Constraints\OneOfChecker
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class OneOfConstraintTest extends \PHPUnit_Framework_TestCase {
+class OneOfCheckerTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testConstructionFails() {
-		new OneOfConstraint( array( new StringValue( 'foo bar' ), null ) );
+		new OneOfChecker( array( new StringValue( 'foo bar' ), null ) );
 	}
 
 	public function testGetName() {
-		$oneOfConstrain = new OneOfConstraint( array() );
+		$oneOfConstrain = new OneOfChecker( array() );
 		$this->assertEquals( 'oneof', $oneOfConstrain->getName() );
 	}
 

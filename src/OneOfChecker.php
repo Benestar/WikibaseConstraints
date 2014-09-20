@@ -13,7 +13,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class OneOfConstraint extends DataValueConstraint {
+class OneOfChecker implements DataValueChecker {
 
 	/**
 	 * @var DataValue[]
@@ -38,7 +38,7 @@ class OneOfConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::supportsDataValue
+	 * @see DataValueChecker::supportsDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
@@ -48,7 +48,7 @@ class OneOfConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::checkDataValue
+	 * @see DataValueChecker::checkDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
@@ -64,7 +64,7 @@ class OneOfConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see Constraint::getName
+	 * @see DataValueChecker::getName
 	 *
 	 * @return string
 	 */

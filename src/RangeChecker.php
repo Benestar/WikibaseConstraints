@@ -13,7 +13,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class RangeConstraint extends DataValueConstraint {
+class RangeChecker implements DataValueChecker {
 
 	/**
 	 * @var DataValue
@@ -48,22 +48,22 @@ class RangeConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see DataValueConstraint::supportsDataValue
+	 * @see DataValueChecker::supportsDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected function supportsDataValue( DataValue $dataValue ) {
+	public function supportsDataValue( DataValue $dataValue ) {
 		return $dataValue->getType() === $this->minValue->getType();
 	}
 
 	/**
-	 * @see DataValueConstraint::checkDataValue
+	 * @see DataValueChecker::checkDataValue
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected function checkDataValue( DataValue $dataValue ) {
+	public function checkDataValue( DataValue $dataValue ) {
 		$minKey = $this->minValue->getSortKey();
 		$maxKey = $this->maxValue->getSortKey();
 		$key = $dataValue->getSortKey();
@@ -72,7 +72,7 @@ class RangeConstraint extends DataValueConstraint {
 	}
 
 	/**
-	 * @see Constraint::getName
+	 * @see DataValueChecker::getName
 	 *
 	 * @return string
 	 */

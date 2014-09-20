@@ -3,25 +3,25 @@
 namespace Wikibase\Test;
 
 use InvalidArgumentException;
-use Wikibase\Constraints\FormatConstraint;
+use Wikibase\Constraints\FormatChecker;
 
 /**
- * @covers Wikibase\Constraints\FormatConstraint
+ * @covers Wikibase\Constraints\FormatChecker
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class FormatConstraintTest extends \PHPUnit_Framework_TestCase {
+class FormatCheckerTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testConstructionFails() {
-		new FormatConstraint( 123 );
+		new FormatChecker( 123 );
 	}
 
 	public function testGetName() {
-		$formatConstrain = new FormatConstraint( '' );
+		$formatConstrain = new FormatChecker( '' );
 		$this->assertEquals( 'format', $formatConstrain->getName() );
 	}
 
