@@ -6,19 +6,19 @@ use DataValues\DataValue;
 use DataValues\NumberValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
-use Wikibase\Constraints\SingleValueConstraint;
+use Wikibase\Constraints\MultiValueConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\PropertyValueSnak;
 
 /**
- * @covers Wikibase\Constraints\SingleValueConstraint
+ * @covers Wikibase\Constraints\MultiValueConstraint
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
+class MultiValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
 	public function provideSupportsSnak() {
 		$cases = array();
@@ -48,8 +48,8 @@ class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testSupportsSnak( Snak $snak, $expected ) {
-		$singleValueConstraint = new SingleValueConstraint();
-		$this->assertEquals( $expected, $singleValueConstraint->supportsSnak( $snak ) );
+		$multiValueConstraint = new MultiValueConstraint();
+		$this->assertEquals( $expected, $multiValueConstraint->supportsSnak( $snak ) );
 	}
 
 	public function provideCheckSnak() {
@@ -63,13 +63,13 @@ class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 		$cases[] = array(
 			new PropertyNoValueSnak( 42 ),
 			$statements,
-			false
+			true
 		);
 
 		$cases[] = array(
 			new PropertyNoValueSnak( 23 ),
 			$statements,
-			true
+			false
 		);
 
 		$cases[] = array(
@@ -89,8 +89,8 @@ class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	 * @param boolean $expected
 	 */
 	public function testCheckSnak( Snak $snak, StatementList $statements, $expected ) {
-		$singleValueConstraint = new SingleValueConstraint();
-		$this->assertEquals( $expected, $singleValueConstraint->checkSnak( $snak, $statements ) );
+		$multiValueConstraint = new MultiValueConstraint();
+		$this->assertEquals( $expected, $multiValueConstraint->checkSnak( $snak, $statements ) );
 	}
 
 }
