@@ -2,9 +2,11 @@
 
 namespace Wikibase\Test;
 
+use DataValues\NumberValue;
 use DataValues\StringValue;
-use Wikibase\Constraints\DataValueChecker;
 use Wikibase\Constraints\DataValueConstraint;
+use Wikibase\Constraints\FormatChecker;
+use Wikibase\Constraints\OneOfChecker;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
@@ -17,60 +19,41 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class DataValueConstraintTest extends \PHPUnit_Framework_TestCase {
 
-	public function provideValidateStatements() {
-		$cases = array();
-
+	public function testValidateStatements_returnsTrue() {
+		$dataValueConstraint = new DataValueConstraint( new FormatChecker( '/foo/' ) );
 		$statements = new StatementList();
 		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
-
-		$cases[] = array( true, true, $statements, true );
-		$cases[] = array( false, true, $statements, true );
-		$cases[] = array( true, false, $statements, true );
-		$cases[] = array( false, false, $statements, true );
-
-		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyValueSnak( 42, new NumberValue( 123 ) ) );
 		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'foo bar' ) ) );
-
-		$cases[] = array( true, true, $statements, true );
-		$cases[] = array( false, true, $statements, true );
-		$cases[] = array( true, false, $statements, false );
-		$cases[] = array( false, false, $statements, true );
-
-		return $cases;
+		$this->assertTrue( $dataValueConstraint->validateStatements( $statements ) );
 	}
 
-	/**
-	 * @dataProvider provideValidateStatements
-	 *
-	 * @param boolean $supportsDataValue
-	 * @param boolean $checkDataValue
-	 * @param StatementList $statements
-	 * @param boolean $expected
-	 */
-	public function testValidateStatements( $supportsDataValue, $checkDataValue, StatementList $statements, $expected ) {
-		$dataValueConstraint = new DataValueConstraint( $this->getDataValueCheckerMock( $supportsDataValue, $checkDataValue ) );
-		$validated = $dataValueConstraint->validateStatements( $statements );
-		$this->assertEquals( $expected, $validated );
+	public function testValidateStatements_returnsFalse() {
+		$dataValueConstraint = new DataValueConstraint( new FormatChecker( '/foo/' ) );
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyValueSnak( 42, new NumberValue( 123 ) ) );
+		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'bar' ) ) );
+		$this->assertFalse( $dataValueConstraint->validateStatements( $statements ) );
 	}
 
-	/**
-	 * @param boolean $supportsDataValue
-	 * @param boolean $checkDataValue
-	 * @return DataValueChecker
-	 */
-	private function getDataValueCheckerMock( $supportsDataValue, $checkDataValue ) {
-		$dataValueChecker = $this->getMock( 'Wikibase\Constraints\DataValueChecker' );
+	public function testGetName() {
+		$dataValueConstraintFormat = new DataValueConstraint( new FormatChecker( '' ) );
+		$this->assertEquals( 'format', $dataValueConstraintFormat->getName() );
+		$dataValueConstraintOneOf = new DataValueConstraint( new OneOfChecker( array() ) );
+		$this->assertEquals( 'oneof', $dataValueConstraintOneOf->getName() );
+	}
 
-		$dataValueChecker->expects( $this->any() )
-			->method( 'supportsDataValue' )
-			->will( $this->returnValue( $supportsDataValue ) );
+	public function testEquals() {
+		$dataValueConstraint1 = new DataValueConstraint( new FormatChecker( 'foo' ) );
+		$dataValueConstraint2 = new DataValueConstraint( new FormatChecker( 'foo' ) );
+		$this->assertTrue( $dataValueConstraint1->equals( $dataValueConstraint2 ) );
+	}
 
-		
-		$dataValueChecker->expects( $this->any() )
-			->method( 'checkDataValue' )
-			->will( $this->returnValue( $checkDataValue ) );
-
-		return $dataValueChecker;
+	public function testNotEquals() {
+		$dataValueConstraint1 = new DataValueConstraint( new FormatChecker( 'foo' ) );
+		$dataValueConstraint2 = new DataValueConstraint( new FormatChecker( 'bar' ) );
+		$this->assertFalse( $dataValueConstraint1->equals( $dataValueConstraint2 ) );
 	}
 
 }
