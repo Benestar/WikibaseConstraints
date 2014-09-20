@@ -32,4 +32,11 @@ interface Constraint {
 	 */
 	public function checkSnak( Snak $snak, StatementList $statements );
 
+	/**
+	 * Returns the unique name of this constraint.
+	 *
+	 * @return string
+	 */
+	public function getName();
+
 }

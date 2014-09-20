@@ -51,4 +51,13 @@ class SnakConstraint implements Constraint {
 		return false;
 	}
 
+	/**
+	 * @see Constraint::getName
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'snak';
+	}
+
 }

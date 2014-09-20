@@ -67,4 +67,13 @@ class RangeConstraint extends DataValueConstraint {
 		return $minKey < $key && $key < $maxKey;
 	}
 
+	/**
+	 * @see Constraint::getName
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'range';
+	}
+
 }

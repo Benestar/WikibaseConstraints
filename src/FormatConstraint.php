@@ -53,4 +53,13 @@ class FormatConstraint extends DataValueConstraint {
 		return preg_match( $this->format, $dataValue->getValue() );
 	}
 
+	/**
+	 * @see Constraint::getName
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'format';
+	}
+
 }

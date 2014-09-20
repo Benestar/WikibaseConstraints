@@ -51,4 +51,13 @@ class ConflictConstraint implements Constraint {
 		return true;
 	}
 
+	/**
+	 * @see Constraint::getName
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'conflict';
+	}
+
 }

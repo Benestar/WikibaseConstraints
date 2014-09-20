@@ -38,4 +38,13 @@ class SingleValueConstraint implements Constraint {
 		return count( $byPropertyIdGrouper->getByPropertyId( $snak->getPropertyId() ) ) === 1;
 	}
 
+	/**
+	 * @see Constraint::getName
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'singlevalue';
+	}
+
 }

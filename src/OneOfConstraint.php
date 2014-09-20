@@ -63,4 +63,13 @@ class OneOfConstraint implements DataValueConstraint {
 		return false;
 	}
 
+	/**
+	 * @see Constraint::getName
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'oneof';
+	}
+
 }
