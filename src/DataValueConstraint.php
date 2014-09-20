@@ -40,9 +40,11 @@ abstract class DataValueConstraint implements Constraint {
 
 		$dataValue = $snak->getDataValue();
 
-		if ( $this->supportsDataValue( $dataValue ) ) {
-			return $this->checkDataValue( $dataValue );
+		if ( !$this->supportsDataValue( $dataValue ) ) {
+			return true;
 		}
+
+		return $this->checkDataValue( $dataValue );
 	}
 
 	/**
@@ -51,7 +53,7 @@ abstract class DataValueConstraint implements Constraint {
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected abstract function supportsDataValue( DataValue $dataValue );
+	public abstract function supportsDataValue( DataValue $dataValue );
 
 	/**
 	 * Returns if the data value passes this constraint.
@@ -59,6 +61,6 @@ abstract class DataValueConstraint implements Constraint {
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	protected abstract function checkDataValue( DataValue $dataValue );
+	public abstract function checkDataValue( DataValue $dataValue );
 
 }

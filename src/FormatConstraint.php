@@ -39,7 +39,7 @@ class FormatConstraint extends DataValueConstraint {
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	public function supportsDataValue( DataValue $dataValue ) {
+	protected function supportsDataValue( DataValue $dataValue ) {
 		return $dataValue instanceof StringValue;
 	}
 
@@ -49,7 +49,7 @@ class FormatConstraint extends DataValueConstraint {
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	public function checkDataValue( DataValue $dataValue ) {
+	protected function checkDataValue( DataValue $dataValue ) {
 		return preg_match( $this->format, $dataValue->getValue() ) === 1;
 	}
 
