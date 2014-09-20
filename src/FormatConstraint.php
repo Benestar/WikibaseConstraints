@@ -50,7 +50,7 @@ class FormatConstraint extends DataValueConstraint {
 	 * @return boolean
 	 */
 	public function checkDataValue( DataValue $dataValue ) {
-		return preg_match( $this->format, $dataValue->getValue() );
+		return preg_match( $this->format, $dataValue->getValue() ) === 1;
 	}
 
 	/**

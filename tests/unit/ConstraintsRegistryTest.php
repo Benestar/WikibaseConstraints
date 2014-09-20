@@ -111,6 +111,12 @@ class ConstraintsRegistryTest extends \PHPUnit_Framework_TestCase {
 		return $constraintsRegistry;
 	}
 
+	/**
+	 * @param boolean $supportsSnak
+	 * @param boolean $failes
+	 * @param string $name
+	 * @return Constraint
+	 */
 	private function getConstraintMock( $supportsSnak, $failes, $name ) {
 		$constraint = $this->getMock( 'Wikibase\Constraints\Constraint' );
 
