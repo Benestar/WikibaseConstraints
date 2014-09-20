@@ -69,6 +69,7 @@ class ConstraintListTest extends \PHPUnit_Framework_TestCase {
 		$constraintList2 = new ConstraintList( array( new SingleValueConstraint() ) );
 
 		$this->assertTrue( $constraintList1->equals( $constraintList2 ) );
+		$this->assertTrue( $constraintList1->equals( $constraintList1 ) );
 	}
 
 	public function testNotEquals() {
@@ -76,6 +77,7 @@ class ConstraintListTest extends \PHPUnit_Framework_TestCase {
 		$constraintList2 = new ConstraintList( array( new MultiValueConstraint() ) );
 
 		$this->assertFalse( $constraintList1->equals( $constraintList2 ) );
+		$this->assertFalse( $constraintList1->equals( null ) );
 	}
 
 	public function testIsEmpty() {

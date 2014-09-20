@@ -47,13 +47,17 @@ class DataValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	public function testEquals() {
 		$dataValueConstraint1 = new DataValueConstraint( new FormatChecker( 'foo' ) );
 		$dataValueConstraint2 = new DataValueConstraint( new FormatChecker( 'foo' ) );
+
 		$this->assertTrue( $dataValueConstraint1->equals( $dataValueConstraint2 ) );
+		$this->assertTrue( $dataValueConstraint1->equals( $dataValueConstraint1 ) );
 	}
 
 	public function testNotEquals() {
 		$dataValueConstraint1 = new DataValueConstraint( new FormatChecker( 'foo' ) );
 		$dataValueConstraint2 = new DataValueConstraint( new FormatChecker( 'bar' ) );
+
 		$this->assertFalse( $dataValueConstraint1->equals( $dataValueConstraint2 ) );
+		$this->assertFalse( $dataValueConstraint1->equals( null ) );
 	}
 
 }

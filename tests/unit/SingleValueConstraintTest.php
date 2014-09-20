@@ -38,7 +38,15 @@ class SingleValueConstraintTest extends \PHPUnit_Framework_TestCase {
 	public function testEquals() {
 		$singleValueConstraint1 = new SingleValueConstraint();
 		$singleValueConstraint2 = new SingleValueConstraint();
+
 		$this->assertTrue( $singleValueConstraint1->equals( $singleValueConstraint2 ) );
+		$this->assertTrue( $singleValueConstraint1->equals( $singleValueConstraint1 ) );
+	}
+
+	public function testNotEquals() {
+		$singleValueConstraint = new SingleValueConstraint();
+
+		$this->assertFalse( $singleValueConstraint->equals( null ) );
 	}
 
 }

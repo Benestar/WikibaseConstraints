@@ -73,13 +73,17 @@ class RangeCheckerTest extends \PHPUnit_Framework_TestCase {
 	public function testEquals() {
 		$rangeChecker1 = new RangeChecker( new NumberValue( 1 ), new NumberValue( 3 ) );
 		$rangeChecker2 = new RangeChecker( new NumberValue( 1 ), new NumberValue( 3 ) );
+
 		$this->assertTrue( $rangeChecker1->equals( $rangeChecker2 ) );
+		$this->assertTrue( $rangeChecker1->equals( $rangeChecker1 ) );
 	}
 
 	public function testNotEquals() {
 		$rangeChecker1 = new RangeChecker( new NumberValue( 1 ), new NumberValue( 3 ) );
 		$rangeChecker2 = new RangeChecker( new NumberValue( 0 ), new NumberValue( 5 ) );
+
 		$this->assertFalse( $rangeChecker1->equals( $rangeChecker2 ) );
+		$this->assertFalse( $rangeChecker1->equals( null ) );
 	}
 
 }

@@ -47,13 +47,17 @@ class OneOfCheckerTest extends \PHPUnit_Framework_TestCase {
 	public function testEquals() {
 		$oneOfChecker1 = new OneOfChecker( array( new StringValue( 'foo' ) ) );
 		$oneOfChecker2 = new OneOfChecker( array( new StringValue( 'foo' ) ) );
+
 		$this->assertTrue( $oneOfChecker1->equals( $oneOfChecker2 ) );
+		$this->assertTrue( $oneOfChecker1->equals( $oneOfChecker1 ) );
 	}
 
 	public function testNotEquals() {
 		$oneOfChecker1 = new OneOfChecker( array( new StringValue( 'foo' ) ) );
 		$oneOfChecker2 = new OneOfChecker( array( new StringValue( 'bar' ) ) );
+
 		$this->assertFalse( $oneOfChecker1->equals( $oneOfChecker2 ) );
+		$this->assertFalse( $oneOfChecker1->equals( null ) );
 	}
 
 }

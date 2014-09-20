@@ -58,13 +58,17 @@ class FormatCheckerTest extends \PHPUnit_Framework_TestCase {
 	public function testEquals() {
 		$formatChecker1 = new FormatChecker( 'foo' );
 		$formatChecker2 = new FormatChecker( 'foo' );
+
 		$this->assertTrue( $formatChecker1->equals( $formatChecker2 ) );
+		$this->assertTrue( $formatChecker1->equals( $formatChecker1 ) );
 	}
 
 	public function testNotEquals() {
 		$formatChecker1 = new FormatChecker( 'foo' );
 		$formatChecker2 = new FormatChecker( 'bar' );
+
 		$this->assertFalse( $formatChecker1->equals( $formatChecker2 ) );
+		$this->assertFalse( $formatChecker1->equals( null ) );
 	}
 
 }

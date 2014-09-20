@@ -37,13 +37,17 @@ class SnakConstraintTest extends \PHPUnit_Framework_TestCase {
 	public function testEquals() {
 		$snakConstraint1 = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
 		$snakConstraint2 = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
+
 		$this->assertTrue( $snakConstraint1->equals( $snakConstraint2 ) );
+		$this->assertTrue( $snakConstraint1->equals( $snakConstraint1 ) );
 	}
 
 	public function testNotEquals() {
 		$snakConstraint1 = new SnakConstraint( new PropertyNoValueSnak( 42 ) );
 		$snakConstraint2 = new SnakConstraint( new PropertySomeValueSnak( 42 ) );
+
 		$this->assertFalse( $snakConstraint1->equals( $snakConstraint2 ) );
+		$this->assertFalse( $snakConstraint1->equals( null ) );
 	}
 
 }
