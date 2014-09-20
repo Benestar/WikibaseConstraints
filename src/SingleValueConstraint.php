@@ -16,7 +16,8 @@ class SingleValueConstraint implements Constraint {
 
 	/**
 	 * @see Constraint::validateStatements
-	 *	 * @param StatementList $statements
+	 *
+	 * @param StatementList $statements
 	 * @return boolean
 	 */
 	public function validateStatements( StatementList $statements ) {
