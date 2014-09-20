@@ -4,8 +4,8 @@ namespace Wikibase\Test;
 
 use Wikibase\Constraints\SnakConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
+use Wikibase\DataModel\Snak\PropertySomeValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
-use Wikibase\PropertySomeValueSnak;
 
 /**
  * @covers Wikibase\Constraints\SnakConstraint
