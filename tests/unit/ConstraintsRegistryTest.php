@@ -2,6 +2,7 @@
 
 namespace Wikibase\Test;
 
+use OutOfBoundsException;
 use Wikibase\Constraints\Constraint;
 use Wikibase\Constraints\ConstraintsRegistry;
 use Wikibase\DataModel\Entity\PropertyId;
@@ -17,58 +18,116 @@ use Wikibase\DataModel\Statement\StatementList;
  */
 class ConstraintsRegistryTest extends \PHPUnit_Framework_TestCase {
 
-	public function provideGetConstraintsForSnak() {
+	public function provideGetConstraintsForPropertyId() {
 		$cases = array();
 
 		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			array( 'c1' )
+			new PropertyId( 'P42' ),
+			array( 'c1', 'c5' )
 		);
 
 		$cases[] = array(
-			new PropertyNoValueSnak( 32 ),
+			new PropertyId( 'P32' ),
 			array( 'c2', 'c4' )
 		);
 
 		$cases[] = array(
-			new PropertyNoValueSnak( 10 ),
-			array()
+			new PropertyId( 'P10' ),
+			array( 'c3' )
 		);
 
 		return $cases;
 	}
 
 	/**
-	 * @dataProvider provideGetConstraintsForSnak
+	 * @dataProvider provideGetConstraintsForPropertyId
 	 *
-	 * @param Snak $snak
+	 * @param ProperyId $propertyId
 	 * @param string[] $expectedConstraintNames
 	 */
-	public function testGetConstraintsForSnak( Snak $snak, array $expectedConstraintNames ) {
-		$constraintsRegistry = $this->getConstraintsRegistryWithConstraints();
-		$constraints = $constraintsRegistry->getConstraintsForSnak( $snak );
+	public function testGetConstraintsForPropertyId( PropertyId $propertyId, array $expectedConstraintNames ) {
+		$constraintRegistry = $this->getConstraintsRegistryWithConstraints();
+		$constraints = $constraintRegistry->getConstraints( $propertyId );
 		$constraintNames = array_map( function( Constraint $constraint ) {
 			return $constraint->getName();
-		}, $constraints );
+		}, $constraints->toArray() );
 		$this->assertEquals( $expectedConstraintNames, $constraintNames );
+	}
+
+	/**
+	 * @expectedException OutOfBoundsException
+	 */
+	public function testGetConstraintsForPropertyIdFails() {
+		$constraintRegistry = $this->getConstraintsRegistryWithConstraints();
+		$constraintRegistry->getConstraints( new PropertyId( 'P11' ) );
+	}
+
+	public function testHasConstraintsForPropertyId() {
+		$constraintRegistry = $this->getConstraintsRegistryWithConstraints();
+		$this->assertTrue( $constraintRegistry->hasConstraints( new PropertyId( 'P42' ) ) );
+		$this->assertTrue( $constraintRegistry->hasConstraints( new PropertyId( 'P10' ) ) );
+		$this->assertFalse( $constraintRegistry->hasConstraints( new PropertyId( 'P11' ) ) );
 	}
 
 	public function provideApplyConstraints() {
 		$cases = array();
 
+		$statements = new StatementList();
+
 		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
+			$statements,
 			array()
 		);
 
-		$cases[] = array(
-			new PropertyNoValueSnak( 32 ),
-			array( 'c4' )
-		);
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 11 ) );
 
 		$cases[] = array(
-			new PropertyNoValueSnak( 10 ),
+			$statements,
 			array()
+		);
+
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 10 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 11 ) );
+
+		$cases[] = array(
+			$statements,
+			array()
+		);
+
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 11 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 12 ) );
+
+		$cases[] = array(
+			$statements,
+			array( 'P12' => array( 'c6' ) )
+		);
+
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 32 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 11 ) );
+
+		$cases[] = array(
+			$statements,
+			array( 'P32' => array( 'c2', 'c4' ) )
+		);
+
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 32 ) );
+		$statements->addNewStatement( new PropertyNoValueSnak( 12 ) );
+
+		$cases[] = array(
+			$statements,
+			array(
+				'P32' => array( 'c2', 'c4' ),
+				'P12' => array( 'c6' )
+			)
 		);
 
 		return $cases;
@@ -77,56 +136,55 @@ class ConstraintsRegistryTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideApplyConstraints
 	 *
-	 * @param Snak $snak
+	 * @param StatementList $statements
 	 * @param string[] $expectedFailures
 	 */
-	public function testApplyConstraintsForSnak( Snak $snak, array $expectedFailures ) {
+	public function testApplyConstraints( StatementList $statements, $expectedFailures ) {
 		$constraintsRegistry = $this->getConstraintsRegistryWithConstraints();
-		$failures = $constraintsRegistry->applyConstraints( $snak, new StatementList() );
+		$failures = $constraintsRegistry->applyConstraints( $statements );
 		$this->assertEquals( $expectedFailures, $failures );
 	}
 
 	private function getConstraintsRegistryWithConstraints() {
 		$constraintsRegistry = new ConstraintsRegistry();
-		$constraintsRegistry->registerConstraintForPropertyId(
+		$constraintsRegistry->registerConstraint(
 			new PropertyId( 'P42' ),
-			$this->getConstraintMock( true, true, 'c1' )
+			$this->getConstraintMock( true, 'c1' )
 		);
-		$constraintsRegistry->registerConstraintForPropertyId(
+		$constraintsRegistry->registerConstraint(
 			new PropertyId( 'P32' ),
-			$this->getConstraintMock( true, true, 'c2' )
+			$this->getConstraintMock( false, 'c2' )
 		);
-		$constraintsRegistry->registerConstraintForPropertyId(
+		$constraintsRegistry->registerConstraint(
 			new PropertyId( 'P10' ),
-			$this->getConstraintMock( false, true, 'c3' )
+			$this->getConstraintMock( true, 'c3' )
 		);
-		$constraintsRegistry->registerConstraintForPropertyId(
+		$constraintsRegistry->registerConstraint(
 			new PropertyId( 'P32' ),
-			$this->getConstraintMock( true, false, 'c4' )
+			$this->getConstraintMock( false, 'c4' )
 		);
-		$constraintsRegistry->registerConstraintForPropertyId(
+		$constraintsRegistry->registerConstraint(
 			new PropertyId( 'P42' ),
-			$this->getConstraintMock( false, false, 'c5' )
+			$this->getConstraintMock( true, 'c5' )
+		);
+		$constraintsRegistry->registerConstraint(
+			new PropertyId( 'P12' ),
+			$this->getConstraintMock( false, 'c6' )
 		);
 		return $constraintsRegistry;
 	}
 
 	/**
-	 * @param boolean $supportsSnak
-	 * @param boolean $failes
+	 * @param boolean $failure
 	 * @param string $name
 	 * @return Constraint
 	 */
-	private function getConstraintMock( $supportsSnak, $failes, $name ) {
+	private function getConstraintMock( $failure, $name ) {
 		$constraint = $this->getMock( 'Wikibase\Constraints\Constraint' );
 
 		$constraint->expects( $this->any() )
-			->method( 'supportsSnak' )
-			->will( $this->returnValue( $supportsSnak ) );
-
-		$constraint->expects( $this->any() )
-			->method( 'checkSnak' )
-			->will( $this->returnValue( $failes ) );
+			->method( 'validateStatements' )
+			->will( $this->returnValue( $failure ) );
 
 		$constraint->expects( $this->any() )
 			->method( 'getName' )

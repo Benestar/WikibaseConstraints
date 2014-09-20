@@ -28,7 +28,7 @@ class ConstraintsRegistry {
 	 * @param PropertyId $propertyId
 	 * @param Constraint $constraint
 	 */
-	public function registerConstraintForPropertyId( PropertyId $propertyId, Constraint $constraint ) {
+	public function registerConstraint( PropertyId $propertyId, Constraint $constraint ) {
 		$idSerialization = $propertyId->getSerialization();
 
 		if ( !isset( $this->constraintsPerProperty[$idSerialization] ) ) {
@@ -45,7 +45,7 @@ class ConstraintsRegistry {
 	 * @return ConstraintList
 	 * @throws OutOfBoundsException
 	 */
-	public function getConstraintsForPropertyId( PropertyId $propertyId ) {
+	public function getConstraints( PropertyId $propertyId ) {
 		$idSerialization = $propertyId->getSerialization();
 
 		if ( !isset( $this->constraintsPerProperty[$idSerialization] ) ) {
@@ -61,7 +61,7 @@ class ConstraintsRegistry {
 	 * @param PropertyId $propertyId
 	 * @return boolean
 	 */
-	public function hasConstraintsForPropertyId( PropertyId $propertyId ) {
+	public function hasConstraints( PropertyId $propertyId ) {
 		return isset( $this->constraintsPerProperty[$propertyId->getSerialization()] );
 	}
 
@@ -76,11 +76,14 @@ class ConstraintsRegistry {
 		$byPropertyIdGrouper = new ByPropertyIdGrouper( $statements );
 		$failures = array();
 
-		foreach ( $this->constraintsPerProperty as $idSerialization => $constraintList ) {
+		foreach ( $this->constraintsPerProperty as $idSerialization => $constraints ) {
 			$propertyId = new PropertyId( $idSerialization );
 			if ( $byPropertyIdGrouper->hasPropertyId( $propertyId ) ) {
 				$statementsForProperty = $byPropertyIdGrouper->getByPropertyId( $propertyId );
-				$failures[$idSerialization] = $constraintList->applyConstraints( $statementsForProperty );
+				$failuresForProperty = $constraints->applyConstraints( new StatementList( $statementsForProperty ) );
+				if ( !empty( $failuresForProperty ) ) {
+					$failures[$idSerialization] = $failuresForProperty;
+				}
 			}
 		}
 
