@@ -7,7 +7,6 @@ use Wikibase\Constraints\Constraint;
 use Wikibase\Constraints\ConstraintsRegistry;
 use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
-use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -42,7 +41,7 @@ class ConstraintsRegistryTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider provideGetConstraintsForPropertyId
 	 *
-	 * @param ProperyId $propertyId
+	 * @param PropertyId $propertyId
 	 * @param string[] $expectedConstraintNames
 	 */
 	public function testGetConstraintsForPropertyId( PropertyId $propertyId, array $expectedConstraintNames ) {

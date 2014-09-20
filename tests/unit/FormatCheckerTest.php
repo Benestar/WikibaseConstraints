@@ -2,6 +2,8 @@
 
 namespace Wikibase\Test;
 
+use DataValues\NumberValue;
+use DataValues\StringValue;
 use InvalidArgumentException;
 use Wikibase\Constraints\FormatChecker;
 
@@ -20,9 +22,49 @@ class FormatCheckerTest extends \PHPUnit_Framework_TestCase {
 		new FormatChecker( 123 );
 	}
 
+	public function testSupportsDataValue() {
+		$formatChecker = new FormatChecker( '' );
+		$this->assertTrue( $formatChecker->supportsDataValue( new StringValue( 'foo bar' ) ) );
+	}
+
+	public function testNotSupportsDataValue() {
+		$formatChecker = new FormatChecker( '' );
+		$this->assertFalse( $formatChecker->supportsDataValue( new NumberValue( 42 ) ) );
+	}
+
+	public function testCheckDataValue_returnsTrue() {
+		$formatChecker = new FormatChecker( '/foo/' );
+		$this->assertTrue( $formatChecker->checkDataValue( new StringValue( 'foo bar' ) ) );
+	}
+
+	public function testCheckDataValue_returnsFalse() {
+		$formatChecker = new FormatChecker( '/foo/' );
+		$this->assertFalse( $formatChecker->checkDataValue( new StringValue( 'bar' ) ) );
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testCheckDataValue_throwsException() {
+		$formatChecker = new FormatChecker( '' );
+		$formatChecker->checkDataValue( new NumberValue( 42 ) );
+	}
+
 	public function testGetName() {
-		$formatConstrain = new FormatChecker( '' );
-		$this->assertEquals( 'format', $formatConstrain->getName() );
+		$formatChecker = new FormatChecker( '' );
+		$this->assertEquals( 'format', $formatChecker->getName() );
+	}
+
+	public function testEquals() {
+		$formatChecker1 = new FormatChecker( 'foo' );
+		$formatChecker2 = new FormatChecker( 'foo' );
+		$this->assertTrue( $formatChecker1->equals( $formatChecker2 ) );
+	}
+
+	public function testNotEquals() {
+		$formatChecker1 = new FormatChecker( 'foo' );
+		$formatChecker2 = new FormatChecker( 'bar' );
+		$this->assertFalse( $formatChecker1->equals( $formatChecker2 ) );
 	}
 
 }

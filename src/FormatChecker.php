@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use DataValues\DataValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
@@ -48,8 +49,13 @@ class FormatChecker implements DataValueChecker {
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
+	 * @throws InvalidArgumentException
 	 */
 	public function checkDataValue( DataValue $dataValue ) {
+		if ( !$this->supportsDataValue( $dataValue ) ) {
+			throw new InvalidArgumentException( 'Only StringValue objects are supported.' );
+		}
+
 		return preg_match( $this->format, $dataValue->getValue() ) === 1;
 	}
 

@@ -2,6 +2,7 @@
 
 namespace Wikibase\Test;
 
+use DataValues\NumberValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
 use Wikibase\Constraints\OneOfChecker;
@@ -21,9 +22,38 @@ class OneOfCheckerTest extends \PHPUnit_Framework_TestCase {
 		new OneOfChecker( array( new StringValue( 'foo bar' ), null ) );
 	}
 
+	public function testSupportsDataValue() {
+		$oneOfChecker = new OneOfChecker( array() );
+		$this->assertTrue( $oneOfChecker->supportsDataValue( new StringValue( 'foo bar' ) ) );
+		$this->assertTrue( $oneOfChecker->supportsDataValue( new NumberValue( 42 ) ) );
+	}
+
+	public function testCheckDataValue_returnsTrue() {
+		$oneOfChecker = new OneOfChecker( array( new StringValue( 'foo' ), new StringValue( 'bar' ) ) );
+		$this->assertTrue( $oneOfChecker->checkDataValue( new StringValue( 'foo' ) ) );
+		$this->assertTrue( $oneOfChecker->checkDataValue( new StringValue( 'bar' ) ) );
+	}
+
+	public function testCheckDataValue_returnsFalse() {
+		$oneOfChecker = new OneOfChecker( array( new StringValue( 'foo' ), new StringValue( 'bar' ) ) );
+		$this->assertFalse( $oneOfChecker->checkDataValue( new StringValue( 'baz' ) ) );
+	}
+
 	public function testGetName() {
-		$oneOfConstrain = new OneOfChecker( array() );
-		$this->assertEquals( 'oneof', $oneOfConstrain->getName() );
+		$oneOfChecker = new OneOfChecker( array() );
+		$this->assertEquals( 'oneof', $oneOfChecker->getName() );
+	}
+
+	public function testEquals() {
+		$oneOfChecker1 = new OneOfChecker( array( new StringValue( 'foo' ) ) );
+		$oneOfChecker2 = new OneOfChecker( array( new StringValue( 'foo' ) ) );
+		$this->assertTrue( $oneOfChecker1->equals( $oneOfChecker2 ) );
+	}
+
+	public function testNotEquals() {
+		$oneOfChecker1 = new OneOfChecker( array( new StringValue( 'foo' ) ) );
+		$oneOfChecker2 = new OneOfChecker( array( new StringValue( 'bar' ) ) );
+		$this->assertFalse( $oneOfChecker1->equals( $oneOfChecker2 ) );
 	}
 
 }

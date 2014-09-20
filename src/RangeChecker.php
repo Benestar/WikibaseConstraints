@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use DataValues\DataValue;
 use InvalidArgumentException;
 
@@ -62,8 +63,13 @@ class RangeChecker implements DataValueChecker {
 	 *
 	 * @param DataValue $dataValue
 	 * @return boolean
+	 * @throws InvalidArgumentException
 	 */
 	public function checkDataValue( DataValue $dataValue ) {
+		if ( !$this->supportsDataValue( $dataValue ) ) {
+			throw new InvalidArgumentException( 'Only values of the same type as the boundaries are accepted.' );
+		}
+
 		$minKey = $this->minValue->getSortKey();
 		$maxKey = $this->maxValue->getSortKey();
 		$key = $dataValue->getSortKey();

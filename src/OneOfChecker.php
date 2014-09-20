@@ -2,6 +2,7 @@
 
 namespace Wikibase\Constraints;
 
+use Comparable;
 use DataValues\DataValue;
 use InvalidArgumentException;
 
@@ -87,7 +88,21 @@ class OneOfChecker implements DataValueChecker {
 			return false;
 		}
 
-		return $this->values === $constraint->values;
+		return $this->dataValuesEqual( $constraint->values );
+	}
+
+	private function dataValuesEqual( array $values ) {
+		reset( $values );
+
+		foreach ( $this->values as $value ) {
+			if ( !$value->equals( current( $values ) ) ) {
+				return false;
+			}
+
+			next( $values );
+		}
+
+		return true;
 	}
 
 }
