@@ -3,11 +3,9 @@
 namespace Wikibase\Test;
 
 use DataValues\StringValue;
-use InvalidArgumentException;
 use Wikibase\Constraints\DataValueConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
-use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
@@ -38,105 +36,40 @@ class DataValueConstraintTest extends \PHPUnit_Framework_TestCase {
 		return $dataValueConstraint;
 	}
 
-	public function provideSupportsSnak() {
+	public function provideValidateStatements() {
 		$cases = array();
 
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			false,
-			false
-		);
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyNoValueSnak( 42 ) );
 
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			true,
-			false
-		);
+		$cases[] = array( true, true, $statements, true );
+		$cases[] = array( false, true, $statements, true );
+		$cases[] = array( true, false, $statements, true );
+		$cases[] = array( false, false, $statements, true );
 
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			false,
-			false
-		);
+		$statements = new StatementList();
+		$statements->addNewStatement( new PropertyValueSnak( 42, new StringValue( 'foo bar' ) ) );
 
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			true,
-			true
-		);
+		$cases[] = array( true, true, $statements, true );
+		$cases[] = array( false, true, $statements, true );
+		$cases[] = array( true, false, $statements, false );
+		$cases[] = array( false, false, $statements, true );
 
 		return $cases;
 	}
 
 	/**
-	 * @dataProvider provideSupportsSnak
+	 * @dataProvider provideValidateStatements
 	 *
-	 * @param Snak $snak
 	 * @param boolean $supportsDataValue
-	 * @param boolean $expected
-	 */
-	public function testSupportsSnak( Snak $snak, $supportsDataValue, $expected ) {
-		$this->assertEquals( $expected, $this->newInstance( $supportsDataValue, true )->supportsSnak( $snak ) );
-	}
-
-	public function provideCheckSnak() {
-		$cases = array();
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			false,
-			false
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			true,
-			true
-		);
-
-		return $cases;
-	}
-
-	/**
-	 * @dataProvider provideCheckSnak
-	 *
-	 * @param Snak $snak
 	 * @param boolean $checkDataValue
+	 * @param StatementList $statements
 	 * @param boolean $expected
 	 */
-	public function testCheckSnak( Snak $snak, $checkDataValue, $expected ) {
-		$this->assertEquals( $expected, $this->newInstance( true, $checkDataValue )->checkSnak( $snak, new StatementList() ) );
-	}
-
-	public function provideCheckSnakFails() {
-		$cases = array();
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			false
-		);
-
-		$cases[] = array(
-			new PropertyNoValueSnak( 42 ),
-			true
-		);
-
-		$cases[] = array(
-			new PropertyValueSnak( 42, new StringValue( 'foo' ) ),
-			false
-		);
-
-		return $cases;
-	}
-
-	/**
-	 * @dataProvider provideCheckSnakFails
-	 * @expectedException InvalidArgumentException
-	 *
-	 * @param Snak $snak
-	 */
-	public function testCheckSnakFails( Snak $snak, $supportsDataValue ) {
-		$this->newInstance( $supportsDataValue, false )->checkSnak( $snak, new StatementList() );
+	public function testValidateStatements( $supportsDataValue, $checkDataValue, StatementList $statements, $expected ) {
+		$dataValueConstraint = $this->newInstance( $supportsDataValue, $checkDataValue );
+		$validated = $dataValueConstraint->validateStatements( $statements );
+		$this->assertEquals( $expected, $validated );
 	}
 
 }

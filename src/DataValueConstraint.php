@@ -53,7 +53,7 @@ abstract class DataValueConstraint implements Constraint {
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	public abstract function supportsDataValue( DataValue $dataValue );
+	protected abstract function supportsDataValue( DataValue $dataValue );
 
 	/**
 	 * Returns if the data value passes this constraint.
@@ -61,6 +61,6 @@ abstract class DataValueConstraint implements Constraint {
 	 * @param DataValue $dataValue
 	 * @return boolean
 	 */
-	public abstract function checkDataValue( DataValue $dataValue );
+	protected abstract function checkDataValue( DataValue $dataValue );
 
 }
