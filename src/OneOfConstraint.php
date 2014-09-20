@@ -13,7 +13,7 @@ use InvalidArgumentException;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class OneOfConstraint implements DataValueConstraint {
+class OneOfConstraint extends DataValueConstraint {
 
 	/**
 	 * @var DataValue[]
