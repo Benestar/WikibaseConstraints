@@ -1,0 +1,90 @@
+<?php
+
+namespace Wikibase\Constraints;
+
+use DataValues\DataValue;
+use Wikibase\DataModel\Snak\Snak;
+
+/**
+ * Description of ConstraintFactory
+ *
+ * @since 0.2
+ *
+ * @license GNU GPL v2+
+ * @author Bene* < benestar.wikimedia@gmail.com >
+ */
+class ConstraintFactory {
+
+	/**
+	 * @since 0.2
+	 *
+	 * @param Snak $snak
+	 * @return SnakConstraint
+	 */
+	public function newSnakConstraint( Snak $snak ) {
+		return new SnakConstraint( $snak );
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @param Snak $snak
+	 * @return ConflictConstraint
+	 */
+	public function newConflictConstraint( Snak $snak ) {
+		return new ConflictConstraint( $snak );
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @return SingleValueConstraint
+	 */
+	public function newSingleValueConstraint() {
+		return new SingleValueConstraint();
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @return MultiValueConstraint
+	 */
+	public function newMultiValueConstraint() {
+		return new MultiValueConstraint();
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @param type $format
+	 * @return DataValueConstraint
+	 */
+	public function newFormatConstraint( $format ) {
+		$formatChecker = new FormatChecker( $format );
+		return new DataValueConstraint( $formatChecker );
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @param array $dataValues
+	 * @return DataValueConstraint
+	 */
+	public function newOneOfConstraint( array $dataValues ) {
+		$oneOfChecker = new OneOfChecker( $dataValues );
+		return new DataValueConstraint( $oneOfChecker );
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @param DataValue $minVal
+	 * @param DataValue $maxVal
+	 * @return DataValueConstraint
+	 */
+	public function newRangeConstraint( DataValue $minVal, DataValue $maxVal ) {
+		$rangeChecker = new RangeChecker( $minVal, $maxVal );
+		return new DataValueConstraint( $rangeChecker );
+	}
+
+}
