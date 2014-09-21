@@ -4,15 +4,15 @@ namespace Wikibase\Test;
 
 use DataValues\NumberValue;
 use DataValues\StringValue;
-use Wikibase\Constraints\DataValueConstraint;
-use Wikibase\Constraints\FormatChecker;
-use Wikibase\Constraints\OneOfChecker;
+use Wikibase\Constraints\Constraint\DataValueConstraint;
+use Wikibase\Constraints\Constraint\FormatChecker;
+use Wikibase\Constraints\Constraint\OneOfChecker;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
- * @covers Wikibase\Constraints\DataValueConstraint
+ * @covers Wikibase\Constraints\Constraint\DataValueConstraint
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >

@@ -2,13 +2,13 @@
 
 namespace Wikibase\Test;
 
-use Wikibase\Constraints\SingleValueConstraint;
+use Wikibase\Constraints\Constraint\SingleValueConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertySomeValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
- * @covers Wikibase\Constraints\SingleValueConstraint
+ * @covers Wikibase\Constraints\Constraint\SingleValueConstraint
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >

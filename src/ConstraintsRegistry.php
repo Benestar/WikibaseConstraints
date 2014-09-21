@@ -3,6 +3,7 @@
 namespace Wikibase\Constraints;
 
 use OutOfBoundsException;
+use Wikibase\Constraints\Constraint\Constraint;
 use Wikibase\DataModel\ByPropertyIdGrouper;
 use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Statement\StatementList;

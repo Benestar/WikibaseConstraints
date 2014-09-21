@@ -5,10 +5,10 @@ namespace Wikibase\Test;
 use DataValues\NumberValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
-use Wikibase\Constraints\OneOfChecker;
+use Wikibase\Constraints\Constraint\OneOfChecker;
 
 /**
- * @covers Wikibase\Constraints\OneOfChecker
+ * @covers Wikibase\Constraints\Constraint\OneOfChecker
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >

@@ -2,13 +2,13 @@
 
 namespace Wikibase\Test;
 
-use Wikibase\Constraints\ConflictConstraint;
+use Wikibase\Constraints\Constraint\ConflictConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertySomeValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
- * @covers Wikibase\Constraints\ConflictConstraint
+ * @covers Wikibase\Constraints\Constraint\ConflictConstraint
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >

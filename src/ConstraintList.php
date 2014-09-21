@@ -8,6 +8,7 @@ use Countable;
 use InvalidArgumentException;
 use IteratorAggregate;
 use Traversable;
+use Wikibase\Constraints\Constraint\Constraint;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**

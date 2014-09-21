@@ -5,10 +5,10 @@ namespace Wikibase\Test;
 use DataValues\NumberValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
-use Wikibase\Constraints\RangeChecker;
+use Wikibase\Constraints\Constraint\RangeChecker;
 
 /**
- * @covers Wikibase\Constraints\RangeChecker
+ * @covers Wikibase\Constraints\Constraint\RangeChecker
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
