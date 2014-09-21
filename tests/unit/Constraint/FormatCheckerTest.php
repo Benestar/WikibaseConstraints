@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Wikibase\Constraints\Constraint\FormatChecker;
 
 /**
- * @covers Wikibase\Constraint\Constraints\FormatChecker
+ * @covers Wikibase\Constraints\Constraint\FormatChecker
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
