@@ -3,7 +3,7 @@
 namespace Wikibase\Test;
 
 use OutOfBoundsException;
-use Wikibase\Constraints\Constraint;
+use Wikibase\Constraints\Constraint\Constraint;
 use Wikibase\Constraints\ConstraintsRegistry;
 use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
@@ -179,7 +179,7 @@ class ConstraintsRegistryTest extends \PHPUnit_Framework_TestCase {
 	 * @return Constraint
 	 */
 	private function getConstraintMock( $failure, $name ) {
-		$constraint = $this->getMock( 'Wikibase\Constraints\Constraint' );
+		$constraint = $this->getMock( 'Wikibase\Constraints\Constraint\Constraint' );
 
 		$constraint->expects( $this->any() )
 			->method( 'validateStatements' )

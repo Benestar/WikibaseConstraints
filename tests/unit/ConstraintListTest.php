@@ -3,9 +3,9 @@
 namespace Wikibase\Test;
 
 use InvalidArgumentException;
+use Wikibase\Constraints\Constraint\MultiValueConstraint;
+use Wikibase\Constraints\Constraint\SingleValueConstraint;
 use Wikibase\Constraints\ConstraintList;
-use Wikibase\Constraints\MultiValueConstraint;
-use Wikibase\Constraints\SingleValueConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 

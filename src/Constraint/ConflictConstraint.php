@@ -1,18 +1,28 @@
 <?php
 
-namespace Wikibase\Constraints;
+namespace Wikibase\Constraints\Constraint;
 
+use Wikibase\DataModel\Snak\Snak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
- * Description of SingleValueConstraint
+ * Description of ConflictConstraint
  *
  * @since 0.1
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class SingleValueConstraint implements Constraint {
+class ConflictConstraint implements Constraint {
+
+	/**
+	 * @var Snak
+	 */
+	private $snak;
+
+	public function __construct( Snak $snak ) {
+		$this->snak = $snak;
+	}
 
 	/**
 	 * @see Constraint::validateStatements
@@ -21,7 +31,13 @@ class SingleValueConstraint implements Constraint {
 	 * @return boolean
 	 */
 	public function validateStatements( StatementList $statements ) {
-		return $statements->count() === 1;
+		foreach ( $statements as $statement ) {
+			if ( $statement->getMainSnak()->equals( $this->snak ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -30,13 +46,13 @@ class SingleValueConstraint implements Constraint {
 	 * @return string
 	 */
 	public function getName() {
-		return 'singlevalue';
+		return 'conflict';
 	}
 
 	/**
 	 * @see Comparable::equals
 	 *
-	 * @param SingleValueConstraint $constraint
+	 * @param ConflictConstraint $constraint
 	 * @return boolean
 	 */
 	public function equals( $constraint ) {
@@ -48,7 +64,7 @@ class SingleValueConstraint implements Constraint {
 			return false;
 		}
 
-		return true;
+		return $this->snak->equals( $constraint->snak );
 	}
 
 }

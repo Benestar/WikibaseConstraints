@@ -5,10 +5,10 @@ namespace Wikibase\Test;
 use DataValues\NumberValue;
 use DataValues\StringValue;
 use InvalidArgumentException;
-use Wikibase\Constraints\FormatChecker;
+use Wikibase\Constraints\Constraint\FormatChecker;
 
 /**
- * @covers Wikibase\Constraints\FormatChecker
+ * @covers Wikibase\Constraint\Constraints\FormatChecker
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >

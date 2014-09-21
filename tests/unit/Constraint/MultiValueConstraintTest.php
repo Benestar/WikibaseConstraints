@@ -2,13 +2,13 @@
 
 namespace Wikibase\Test;
 
-use Wikibase\Constraints\MultiValueConstraint;
+use Wikibase\Constraints\Constraint\MultiValueConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Snak\PropertySomeValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 
 /**
- * @covers Wikibase\Constraints\MultiValueConstraint
+ * @covers Wikibase\Constraints\Constraint\MultiValueConstraint
  *
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >

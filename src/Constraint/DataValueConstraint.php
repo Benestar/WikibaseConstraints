@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\Constraints;
+namespace Wikibase\Constraints\Constraint;
 
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;

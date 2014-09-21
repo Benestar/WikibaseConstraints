@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\Constraints;
+namespace Wikibase\Constraints\Constraint;
 
 use Comparable;
 use DataValues\DataValue;
