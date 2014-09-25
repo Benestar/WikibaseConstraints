@@ -10,6 +10,7 @@
 
 * Created `StatementListProvider` interface
 * Created `ConstraintFactory` class
+* Created `DiffRangeConstraint` class
 
 ## Version 0.1 (2014-09-21)
 
