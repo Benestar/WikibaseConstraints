@@ -64,8 +64,10 @@ class ConstraintFactory {
 	/**
 	 * @since 0.2
 	 *
-	 * @param type $format
+	 * @param string $format
 	 * @return DataValueConstraint
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public function newFormatConstraint( $format ) {
 		$formatChecker = new FormatChecker( $format );
@@ -75,8 +77,10 @@ class ConstraintFactory {
 	/**
 	 * @since 0.2
 	 *
-	 * @param array $dataValues
+	 * @param DataValue[] $dataValues
 	 * @return DataValueConstraint
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public function newOneOfConstraint( array $dataValues ) {
 		$oneOfChecker = new OneOfChecker( $dataValues );
@@ -89,6 +93,8 @@ class ConstraintFactory {
 	 * @param DataValue $minVal
 	 * @param DataValue $maxVal
 	 * @return DataValueConstraint
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public function newRangeConstraint( DataValue $minVal, DataValue $maxVal ) {
 		$rangeChecker = new RangeChecker( $minVal, $maxVal );
