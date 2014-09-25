@@ -3,6 +3,14 @@
 namespace Wikibase\Constraints;
 
 use DataValues\DataValue;
+use Wikibase\Constraints\Constraint\ConflictConstraint;
+use Wikibase\Constraints\Constraint\DataValueConstraint;
+use Wikibase\Constraints\Constraint\FormatChecker;
+use Wikibase\Constraints\Constraint\MultiValueConstraint;
+use Wikibase\Constraints\Constraint\OneOfChecker;
+use Wikibase\Constraints\Constraint\RangeChecker;
+use Wikibase\Constraints\Constraint\SingleValueConstraint;
+use Wikibase\Constraints\Constraint\SnakConstraint;
 use Wikibase\DataModel\Snak\Snak;
 
 /**

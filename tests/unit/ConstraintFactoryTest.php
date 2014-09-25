@@ -3,15 +3,15 @@
 namespace Wikibase\Test;
 
 use DataValues\NumberValue;
-use Wikibase\Constraints\ConflictConstraint;
+use Wikibase\Constraints\Constraint\ConflictConstraint;
+use Wikibase\Constraints\Constraint\DataValueConstraint;
+use Wikibase\Constraints\Constraint\FormatChecker;
+use Wikibase\Constraints\Constraint\MultiValueConstraint;
+use Wikibase\Constraints\Constraint\OneOfChecker;
+use Wikibase\Constraints\Constraint\RangeChecker;
+use Wikibase\Constraints\Constraint\SingleValueConstraint;
+use Wikibase\Constraints\Constraint\SnakConstraint;
 use Wikibase\Constraints\ConstraintFactory;
-use Wikibase\Constraints\DataValueConstraint;
-use Wikibase\Constraints\FormatChecker;
-use Wikibase\Constraints\MultiValueConstraint;
-use Wikibase\Constraints\OneOfChecker;
-use Wikibase\Constraints\RangeChecker;
-use Wikibase\Constraints\SingleValueConstraint;
-use Wikibase\Constraints\SnakConstraint;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 
 /**
@@ -27,7 +27,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$snak = new PropertyNoValueSnak( 42 );
 		$constraint = $constraintFactory->newSnakConstraint( $snak );
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\SnakConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\SnakConstraint', $constraint );
 		$this->assertEquals( new SnakConstraint( $snak ), $constraint );
 	}
 
@@ -36,7 +36,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$snak = new PropertyNoValueSnak( 42 );
 		$constraint = $constraintFactory->newConflictConstraint( $snak );
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\ConflictConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\ConflictConstraint', $constraint );
 		$this->assertEquals( new ConflictConstraint( $snak ), $constraint );
 	}
 
@@ -44,7 +44,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$constraintFactory = new ConstraintFactory();
 		$constraint = $constraintFactory->newSingleValueConstraint();
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\SingleValueConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\SingleValueConstraint', $constraint );
 		$this->assertEquals( new SingleValueConstraint(), $constraint );
 	}
 
@@ -52,7 +52,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$constraintFactory = new ConstraintFactory();
 		$constraint = $constraintFactory->newMultiValueConstraint();
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\MultiValueConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\MultiValueConstraint', $constraint );
 		$this->assertEquals( new MultiValueConstraint(), $constraint );
 	}
 
@@ -60,7 +60,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$constraintFactory = new ConstraintFactory();
 		$constraint = $constraintFactory->newFormatConstraint( 'foo bar' );
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\DataValueConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\DataValueConstraint', $constraint );
 		$this->assertEquals( new DataValueConstraint( new FormatChecker( 'foo bar' ) ), $constraint );
 	}
 
@@ -68,7 +68,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$constraintFactory = new ConstraintFactory();
 		$constraint = $constraintFactory->newOneOfConstraint( array( new NumberValue( 42 ) ) );
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\DataValueConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\DataValueConstraint', $constraint );
 		$this->assertEquals( new DataValueConstraint( new OneOfChecker( array( new NumberValue( 42 ) ) ) ), $constraint );
 	}
 
@@ -76,7 +76,7 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 		$constraintFactory = new ConstraintFactory();
 		$constraint = $constraintFactory->newRangeConstraint( new NumberValue( 1 ), new NumberValue( 2 ) );
 
-		$this->assertInstanceOf( 'Wikibase\Constraints\DataValueConstraint', $constraint );
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\DataValueConstraint', $constraint );
 		$this->assertEquals( new DataValueConstraint( new RangeChecker( new NumberValue( 1 ), new NumberValue( 2 ) ) ), $constraint );
 	}
 
