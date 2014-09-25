@@ -13,7 +13,7 @@ use Wikibase\DataModel\Statement\StatementList;
  * @license GNU GPL v2+
  * @author Bene* < benestar.wikimedia@gmail.com >
  */
-class DiffRangeConstraintTest {
+class DiffRangeConstraintTest extends \PHPUnit_Framework_TestCase {
 
 	public function testValidateStatements_returnsTrue() {
 		$diffRangeConstraint = new DiffRangeConstraint( new NumberValue( 5 ) );
