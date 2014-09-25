@@ -17,8 +17,6 @@ interface StatementListProvider {
 	/**
 	 * Returns a list of statements for the given entity id.
 	 *
-	 * @since 0.2
-	 *
 	 * @param EntityId $entityId
 	 * @return StatementList
 	 */
