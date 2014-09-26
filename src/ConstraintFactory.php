@@ -3,8 +3,10 @@
 namespace Wikibase\Constraints;
 
 use DataValues\DataValue;
+use InvalidArgumentException;
 use Wikibase\Constraints\Constraint\ConflictConstraint;
 use Wikibase\Constraints\Constraint\DataValueConstraint;
+use Wikibase\Constraints\Constraint\DiffRangeConstraint;
 use Wikibase\Constraints\Constraint\FormatChecker;
 use Wikibase\Constraints\Constraint\MultiValueConstraint;
 use Wikibase\Constraints\Constraint\OneOfChecker;
@@ -59,6 +61,15 @@ class ConstraintFactory {
 	 */
 	public function newMultiValueConstraint() {
 		return new MultiValueConstraint();
+	}
+
+	/**
+	 * @since 0.2
+	 *
+	 * @return DiffRangeConstraint
+	 */
+	public function newDiffRangeConstraint( DataValue $diff ) {
+		return new DiffRangeConstraint( $diff );
 	}
 
 	/**
