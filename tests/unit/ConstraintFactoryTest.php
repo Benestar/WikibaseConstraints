@@ -5,6 +5,7 @@ namespace Wikibase\Test;
 use DataValues\NumberValue;
 use Wikibase\Constraints\Constraint\ConflictConstraint;
 use Wikibase\Constraints\Constraint\DataValueConstraint;
+use Wikibase\Constraints\Constraint\DiffRangeConstraint;
 use Wikibase\Constraints\Constraint\FormatChecker;
 use Wikibase\Constraints\Constraint\MultiValueConstraint;
 use Wikibase\Constraints\Constraint\OneOfChecker;
@@ -54,6 +55,14 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\MultiValueConstraint', $constraint );
 		$this->assertEquals( new MultiValueConstraint(), $constraint );
+	}
+
+	public function testNewDiffRangeConstraint() {
+		$constraintFactory = new ConstraintFactory();
+		$constraint = $constraintFactory->newDiffRangeConstraint( new NumberValue( 42 ) );
+
+		$this->assertInstanceOf( 'Wikibase\Constraints\Constraint\DiffRangeConstraint', $constraint );
+		$this->assertEquals( new DiffRangeConstraint( new NumberValue( 42 ) ), $constraint );
 	}
 
 	public function testNewFormatConstraint() {
